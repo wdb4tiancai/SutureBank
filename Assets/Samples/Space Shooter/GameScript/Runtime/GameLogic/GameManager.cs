@@ -24,8 +24,8 @@ public class GameManager
 	/// </summary>
 	public MonoBehaviour Behaviour;
 
-
-	private GameManager()
+    
+    private GameManager()
 	{
 		// 注册监听事件
 		_eventGroup.AddListener<SceneEventDefine.ChangeToHomeScene>(OnHandleEventMessage);
