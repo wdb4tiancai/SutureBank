@@ -42,6 +42,7 @@ public class LauncherOperation : GameAsyncOperation
         m_Machine.AddNode<FsmDownloadPackageOver>();
         m_Machine.AddNode<FsmClearPackageCache>();
         m_Machine.AddNode<FsmUpdaterDone>();
+        m_Machine.AddNode<FsmLoadHotUpdateDll>();
         m_Machine.AddNode<FsmLauncherGame>();
 
         //启动器ui路径
@@ -67,12 +68,7 @@ public class LauncherOperation : GameAsyncOperation
         if (m_Steps == LauncherSteps.Update)
         {
             m_Machine.Update();
-            //if (m_machine.CurrentNode == typeof(FsmUpdaterDone).FullName)
-            //{
-            //    m_eventGroup.RemoveAllListener();
-            //    Status = EOperationStatus.Succeed;
-            //    m_steps = LauncherSteps.Done;
-            //}
+
         }
     }
     protected override void OnAbort()

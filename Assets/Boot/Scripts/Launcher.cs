@@ -42,7 +42,7 @@ public class Launcher : MonoBehaviour
         YooAssets.Initialize();
 
         // 开始补丁更新流程
-        LauncherOperation operation = new LauncherOperation(LauncherUiPath, AssetPackageName, EDefaultBuildPipeline.BuiltinBuildPipeline.ToString(), PlayMode);
+        LauncherOperation operation = new LauncherOperation(LauncherUiPath, AssetPackageName, "", PlayMode);//EDefaultBuildPipeline.BuiltinBuildPipeline.ToString()
         YooAssets.StartOperation(operation);
     }
 }

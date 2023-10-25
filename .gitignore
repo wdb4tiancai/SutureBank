@@ -17,3 +17,7 @@
 /UniFramework.Event.csproj
 /UniFramework.Machine.csproj
 /UniFramework.Utility.csproj
+/HybridCLRData/AssembliesPostIl2CppStrip
+/HybridCLRData
+/YooAsset.Editor.csproj
+/YooAsset.csproj

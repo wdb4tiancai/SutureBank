@@ -24,7 +24,7 @@ internal class FsmUpdaterDone : IStateNode
         var packageName = (string)m_Machine.GetBlackboardValue("PackageName");
         var gamePackage = YooAssets.GetPackage(packageName);
         YooAssets.SetDefaultPackage(gamePackage);
-        m_Machine.ChangeState<FsmLauncherGame>();
+        m_Machine.ChangeState<FsmLoadHotUpdateDll>();
     }
     void IStateNode.OnUpdate()
     {
