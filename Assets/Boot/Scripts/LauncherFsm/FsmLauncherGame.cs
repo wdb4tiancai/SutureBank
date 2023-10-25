@@ -18,7 +18,7 @@ internal class FsmLauncherGame : IStateNode
     void IStateNode.OnEnter()
     {
         // 切换到主页面场景
-        SceneEventDefine.ChangeToHomeScene.SendEventMessage();
+        LauncherEventDefine.ChangeToLoginScene.SendEventMessage();
     }
     void IStateNode.OnUpdate()
     {

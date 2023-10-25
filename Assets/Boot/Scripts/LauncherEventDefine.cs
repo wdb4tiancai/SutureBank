@@ -168,4 +168,16 @@ public class LauncherEventDefine
             UniEvent.SendMessage(msg);
         }
     }
+
+    /// <summary>
+    /// 切换到登录场景
+    /// </summary>
+    public class ChangeToLoginScene : IEventMessage
+    {
+        public static void SendEventMessage()
+        {
+            var msg = new ChangeToLoginScene();
+            UniEvent.SendMessage(msg);
+        }
+    }
 }

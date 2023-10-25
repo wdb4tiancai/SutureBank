@@ -28,8 +28,7 @@ public class LauncherBehaviour
     private LauncherBehaviour()
     {
         // ×¢²á¼àÌýÊÂ¼þ
-        _eventGroup.AddListener<SceneEventDefine.ChangeToHomeScene>(OnHandleEventMessage);
-        _eventGroup.AddListener<SceneEventDefine.ChangeToBattleScene>(OnHandleEventMessage);
+        _eventGroup.AddListener<LauncherEventDefine.ChangeToLoginScene>(OnHandleEventMessage);
     }
 
     /// <summary>
@@ -45,13 +44,9 @@ public class LauncherBehaviour
     /// </summary>
     private void OnHandleEventMessage(IEventMessage message)
     {
-        if (message is SceneEventDefine.ChangeToHomeScene)
+        if (message is LauncherEventDefine.ChangeToLoginScene)
         {
-            YooAssets.LoadSceneAsync("scene_home");
-        }
-        else if (message is SceneEventDefine.ChangeToBattleScene)
-        {
-            YooAssets.LoadSceneAsync("scene_battle");
+            YooAssets.LoadSceneAsync("SceneLogin");
         }
     }
 }
