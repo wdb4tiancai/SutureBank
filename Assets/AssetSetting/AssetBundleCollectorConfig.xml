@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root Version="v2.0.0">
+  <Common ShowPackageView="False" ShowEditorAlias="True" UniqueBundleName="False" />
+  <Package PackageName="DefaultPackage" PackageDesc="" AutoAddressable="True" LocationToLower="False" IncludeAssetGUID="False" IgnoreDefaultType="True">
+    <Group GroupActiveRule="EnableGroup" GroupName="scene" GroupDesc="场景" AssetTags="">
+      <Collector CollectPath="Assets/HotAssets/Scene" CollectGUID="6070eae1192f2994887f2983a177d503" CollectType="MainAssetCollector" AddressRule="AddressByFileName" PackRule="PackSeparately" FilterRule="CollectAll" UserData="" AssetTags="" />
+    </Group>
+  </Package>
+</root>
