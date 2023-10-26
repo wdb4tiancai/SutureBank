@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
@@ -7,7 +7,7 @@ using HybridCLR;
 using System.Reflection;
 
 /// <summary>
-/// ¼ÓÔØÈÈ¸ü´úÂë
+/// åŠ è½½çƒ­æ›´ä»£ç 
 /// </summary>
 internal class FsmLoadHotUpdateDll : IStateNode
 {
@@ -20,9 +20,9 @@ internal class FsmLoadHotUpdateDll : IStateNode
     void IStateNode.OnEnter()
     {
         m_IsLoadDllSucceed = true;
-        LauncherEventDefine.LauncherStatesChange.SendEventMessage("¼ÓÔØÈÈ¸ü´úÂë£¡");
+        LauncherEventDefine.LauncherStatesChange.SendEventMessage("åŠ è½½çƒ­æ›´ä»£ç ï¼");
+        Debug.Log("åŠ è½½çƒ­æ›´ä»£ç ");
 #if UNITY_EDITOR
-        Debug.Log("¼ÓÔØÈÈ¸ü´úÂë");
         m_Machine.ChangeState<FsmLauncherGame>();
 #else
         LauncherBehaviour.Instance.StartCoroutine(LoadHotUpdateDll());
@@ -38,7 +38,7 @@ internal class FsmLoadHotUpdateDll : IStateNode
     {
     }
 
-    //¼ÓÔØDLL´úÂë
+    //åŠ è½½DLLä»£ç 
     private IEnumerator LoadHotUpdateDll()
     {
         yield return LoadMetadataForAOTAssemblies();
@@ -54,10 +54,10 @@ internal class FsmLoadHotUpdateDll : IStateNode
         m_Machine.ChangeState<FsmLauncherGame>();
     }
 
-    //¼ÓÔØAotÒÀÀµ
+    //åŠ è½½Aotä¾èµ–
     private IEnumerator LoadMetadataForAOTAssemblies()
     {
-        Debug.Log("¼ÓÔØAotÒÀÀµ");
+        Debug.Log("åŠ è½½AOTä¾èµ–");
         HomologousImageMode mode = HomologousImageMode.SuperSet;
 
         List<string> allDllNames = new List<string>() { "YooAsset.dll", "mscorlib.dll" };
@@ -67,16 +67,16 @@ internal class FsmLoadHotUpdateDll : IStateNode
             yield return dataHandle;
             if (dataHandle.Status != EOperationStatus.Succeed)
             {
-                Debug.Log("×ÊÔ´¼ÓÔØÊ§°Ü" + name);
+                Debug.Log("AOTèµ„æºåŠ è½½å¤±è´¥" + name);
                 m_IsLoadDllSucceed = false;
                 yield break;
             }
-            // ¼ÓÔØassembly¶ÔÓ¦µÄdll£¬»á×Ô¶¯ÎªËühook¡£Ò»µ©aot·ºĞÍº¯ÊıµÄnativeº¯Êı²»´æÔÚ£¬ÓÃ½âÊÍÆ÷°æ±¾´úÂë
+            // åŠ è½½assemblyå¯¹åº”çš„dllï¼Œä¼šè‡ªåŠ¨ä¸ºå®ƒhookã€‚ä¸€æ—¦aotæ³›å‹å‡½æ•°çš„nativeå‡½æ•°ä¸å­˜åœ¨ï¼Œç”¨è§£é‡Šå™¨ç‰ˆæœ¬ä»£ç 
             LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(((TextAsset)dataHandle.AssetObject).bytes, mode);
             dataHandle.Release();
             if (err != LoadImageErrorCode.OK)
             {
-                Debug.Log("×ÊÔ´¼ÓÔØÊ§°Ü" + name);
+                Debug.Log("AOTåŠ è½½å¤±è´¥" + name);
                 m_IsLoadDllSucceed = false;
                 yield break;
             }
@@ -85,10 +85,10 @@ internal class FsmLoadHotUpdateDll : IStateNode
         yield return true;
     }
 
-    //¼ÓÔØ´úÂë
+    //åŠ è½½ä»£ç 
     private IEnumerator LoadHotUpdateAssemblies()
     {
-        Debug.Log("¼ÓÔØ´úÂë");
+        Debug.Log("åŠ è½½ä»£ç ");
         List<string> allDllNames = new List<string>() { "HotScripts.dll" };
         foreach (var name in allDllNames)
         {
@@ -96,14 +96,14 @@ internal class FsmLoadHotUpdateDll : IStateNode
             yield return dataHandle;
             if (dataHandle.Status != EOperationStatus.Succeed)
             {
-                Debug.Log("×ÊÔ´¼ÓÔØÊ§°Ü" + name);
+                Debug.Log("èµ„æºåŠ è½½å¤±è´¥" + name);
                 m_IsLoadDllSucceed = false;
                 yield break;
             }
             Assembly assembly = Assembly.Load(((TextAsset)dataHandle.AssetObject).bytes);
             dataHandle.Release();
             Debug.Log(assembly.GetTypes());
-            Debug.Log($"¼ÓÔØÈÈ¸üĞÂDll:{name}");
+            Debug.Log($"åŠ è½½çƒ­æ›´æ–°Dll:{name}");
         }
         yield return true;
     }

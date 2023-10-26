@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UniFramework.Event;
 using UnityEngine;
 using YooAsset;
@@ -7,42 +7,41 @@ using YooAsset;
 public class Launcher : MonoBehaviour
 {
     /// <summary>
-    /// ×ÊÔ´ÏµÍ³ÔËĞĞÄ£Ê½
+    /// èµ„æºç³»ç»Ÿè¿è¡Œæ¨¡å¼
     /// </summary>
     public EPlayMode PlayMode = EPlayMode.EditorSimulateMode;
 
     /// <summary>
-    /// ×ÊÔ´°üµÄÃû×Ö
+    /// èµ„æºåŒ…çš„åå­—
     /// </summary>
     public string AssetPackageName = string.Empty;
 
     /// <summary>
-    /// Æô¶¯Ui
+    /// å¯åŠ¨Ui
     /// </summary>
     /// 
     public string LauncherUiPath = string.Empty;
 
-
     void Awake()
     {
-        Debug.Log($"×ÊÔ´ÏµÍ³ÔËĞĞÄ£Ê½£º{PlayMode}");
+        Debug.Log($"èµ„æºç³»ç»Ÿè¿è¡Œæ¨¡å¼ï¼š{PlayMode}");
         Application.targetFrameRate = 60;
         Application.runInBackground = true;
         DontDestroyOnLoad(this.gameObject);
     }
     void Start()
     {
-        // ÓÎÏ·¹ÜÀíÆ÷
+        // æ¸¸æˆç®¡ç†å™¨
         LauncherBehaviour.Instance.Behaviour = this;
 
-        // ³õÊ¼»¯ÊÂ¼şÏµÍ³
+        // åˆå§‹åŒ–äº‹ä»¶ç³»ç»Ÿ
         UniEvent.Initalize();
 
-        // ³õÊ¼»¯×ÊÔ´ÏµÍ³
+        // åˆå§‹åŒ–èµ„æºç³»ç»Ÿ
         YooAssets.Initialize();
 
-        // ¿ªÊ¼²¹¶¡¸üĞÂÁ÷³Ì
-        LauncherOperation operation = new LauncherOperation(LauncherUiPath, AssetPackageName, "", PlayMode);//EDefaultBuildPipeline.BuiltinBuildPipeline.ToString()
+        // å¼€å§‹è¡¥ä¸æ›´æ–°æµç¨‹
+        LauncherOperation operation = new LauncherOperation(LauncherUiPath, AssetPackageName, EDefaultBuildPipeline.BuiltinBuildPipeline.ToString(), PlayMode);
         YooAssets.StartOperation(operation);
     }
 }
