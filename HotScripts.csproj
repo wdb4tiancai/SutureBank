@@ -754,6 +754,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="UIFramework.csproj">
+      <Project>{3FDFBFD6-E0EA-5456-0317-25665CE3CDAC}</Project>
+      <Name>UIFramework</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="GenerateTargetFrameworkMonikerAttribute" />
