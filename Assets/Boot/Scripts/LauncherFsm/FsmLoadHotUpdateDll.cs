@@ -5,6 +5,7 @@ using UniFramework.Machine;
 using YooAsset;
 using HybridCLR;
 using System.Reflection;
+using LitJson;
 
 /// <summary>
 /// 加载热更代码
@@ -26,7 +27,6 @@ internal class FsmLoadHotUpdateDll : IStateNode
         m_Machine.ChangeState<FsmLauncherGame>();
 #else
         LauncherBehaviour.Instance.StartCoroutine(LoadHotUpdateDll());
-
 #endif
 
 
@@ -60,7 +60,10 @@ internal class FsmLoadHotUpdateDll : IStateNode
         Debug.Log("加载AOT依赖");
         HomologousImageMode mode = HomologousImageMode.SuperSet;
 
-        List<string> allDllNames = new List<string>() { "YooAsset.dll", "mscorlib.dll" };
+        var cfgHandle = YooAssets.LoadAssetSync("AotDllCfg", typeof(TextAsset));
+        yield return cfgHandle;
+
+        List<string> allDllNames = JsonMapper.ToObject<List<string>>(((TextAsset)cfgHandle.AssetObject).ToString());
         foreach (var name in allDllNames)
         {
             var dataHandle = YooAssets.LoadAssetSync(name, typeof(TextAsset));
@@ -89,7 +92,10 @@ internal class FsmLoadHotUpdateDll : IStateNode
     private IEnumerator LoadHotUpdateAssemblies()
     {
         Debug.Log("加载代码");
-        List<string> allDllNames = new List<string>() { "HotScripts.dll" };
+        var cfgHandle = YooAssets.LoadAssetSync("HotUpdateDllCfg", typeof(TextAsset));
+        yield return cfgHandle;
+
+        List<string> allDllNames = JsonMapper.ToObject<List<string>>(((TextAsset)cfgHandle.AssetObject).ToString());
         foreach (var name in allDllNames)
         {
             var dataHandle = YooAssets.LoadAssetSync(name, typeof(TextAsset));

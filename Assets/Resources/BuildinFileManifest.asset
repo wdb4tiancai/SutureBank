@@ -13,9 +13,12 @@ MonoBehaviour:
   m_Name: BuildinFileManifest
   m_EditorClassIdentifier: 
   BuildinFiles:
+  - assets_hotassets_aotdll_aotdllcfg_json.rawfile
   - assets_hotassets_aotdll_mscorlib_dll_bytes.rawfile
   - assets_hotassets_aotdll_yooasset_dll_bytes.rawfile
   - assets_hotassets_hotupdatedll_hotscripts_dll_bytes.rawfile
+  - assets_hotassets_hotupdatedll_hotupdatedllcfg_json.rawfile
   - assets_hotassets_prefabs_testcube.bundle
   - assets_hotassets_prefabs_testsphere.bundle
+  - assets_hotassets_prefabs_ui_uiframe.bundle
   - assets_hotassets_scenes_scenelogin.bundle

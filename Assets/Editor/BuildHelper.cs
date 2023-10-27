@@ -53,40 +53,22 @@ public class BuildHelper
 
     }
 
-
-
-    [MenuItem("工具/生成AOT补充文件并复制进文件夹")]
-    public static void GenerateAOTDllListFile()
+    [MenuItem("工具/生成AOTDll并复制进文件夹")]
+    public static bool GenerateAOTDllListFile()
     {
         //先生成AOT文件
         PrebuildCommand.GenerateAll();
-        //拷贝文件
-        CopDllFileTOHotUpdatePath();
 
-        Debug.Log("生成AOT补充文件并复制进文件夹完毕");
-    }
-
-    //拷贝Dll去热更目录
-    private static bool CopDllFileTOHotUpdatePath()
-    {
+        //后拷贝文件
         string aotDllSourcePath = Path.Combine(ProjectPath, HotAotDllSourcePath, GetTargetPath());
         Debug.Log($"AOTDll来源目录 {aotDllSourcePath}");
-        string gameDllSourcePath = Path.Combine(ProjectPath, HotGameDllSourcePath, GetTargetPath());
-        Debug.Log($"热更代码Dll来源目录 {gameDllSourcePath}");
 
         string aotDllTargetPath = Path.Combine(ProjectPath, HotAotDllTargetPath);
         Debug.Log($"AOTDll目标目录 {aotDllTargetPath}");
 
-        string gameDllTargetPath = Path.Combine(ProjectPath, HotGameDllTargetPath);
-        Debug.Log($"热更代码Dll目标目录 {gameDllTargetPath}");
-
         // AOTDll配置文件名字
         string aotDllCfgFilePath = Path.Combine(aotDllTargetPath, HotAotDllCfgFileName);
         Debug.Log($"AOTDll配置文件名字 {aotDllCfgFilePath}");
-
-        //热更代码Dll配置文件名字
-        string gameDllCfgFilePath = Path.Combine(gameDllTargetPath, HotGameDllCfgFileName);
-        Debug.Log($"热更代码Dll配置文件名字 {gameDllCfgFilePath}");
 
         if (!Directory.Exists(aotDllTargetPath))
         {
@@ -94,20 +76,9 @@ public class BuildHelper
             return false;
         }
 
-        if (!Directory.Exists(gameDllTargetPath))
-        {
-            Debug.LogError($"AOTDll目标目录 {gameDllTargetPath} 不存在");
-            return false;
-        }
-
         if (!File.Exists(aotDllCfgFilePath))
         {
             Debug.LogError($"AOTDll配置文件 {aotDllCfgFilePath}不存在");
-            return false;
-        }
-        if (!File.Exists(gameDllCfgFilePath))
-        {
-            Debug.LogError($"热更代码Dll配置文件 {gameDllCfgFilePath}不存在");
             return false;
         }
 
@@ -119,14 +90,7 @@ public class BuildHelper
                 File.Delete(fileNmae);
             }
         }
-        //移除旧的GameDLL文件
-        foreach (string fileNmae in Directory.GetFiles(gameDllTargetPath))
-        {
-            if (!fileNmae.Contains(".json"))
-            {
-                File.Delete(fileNmae);
-            }
-        }
+
         //根据配置列表拷贝新的AOTDLL
         List<string> aotDllFileName = JsonMapper.ToObject<List<string>>(File.ReadAllText(aotDllCfgFilePath));
         for (int i = 0; i < aotDllFileName.Count; i++)
@@ -139,6 +103,51 @@ public class BuildHelper
                 return false;
             }
             File.Copy(copySourcePath, copyTagetPath);
+        }
+
+
+        AssetDatabase.Refresh();
+        Debug.Log("生成AOTDll并复制进文件夹");
+        return true;
+    }
+
+    [MenuItem("工具/生成HotDll件并复制进文件夹")]
+    public static bool GenerateHotDllListFile()
+    {
+        //先生成AOT文件
+        CompileDllCommand.CompileDllActiveBuildTarget();
+
+        //后拷贝文件
+        string gameDllSourcePath = Path.Combine(ProjectPath, HotGameDllSourcePath, GetTargetPath());
+        Debug.Log($"热更代码Dll来源目录 {gameDllSourcePath}");
+
+        string gameDllTargetPath = Path.Combine(ProjectPath, HotGameDllTargetPath);
+        Debug.Log($"热更代码Dll目标目录 {gameDllTargetPath}");
+
+
+        //热更代码Dll配置文件名字
+        string gameDllCfgFilePath = Path.Combine(gameDllTargetPath, HotGameDllCfgFileName);
+        Debug.Log($"热更代码Dll配置文件名字 {gameDllCfgFilePath}");
+
+        if (!Directory.Exists(gameDllTargetPath))
+        {
+            Debug.LogError($"AOTDll目标目录 {gameDllTargetPath} 不存在");
+            return false;
+        }
+
+        if (!File.Exists(gameDllCfgFilePath))
+        {
+            Debug.LogError($"热更代码Dll配置文件 {gameDllCfgFilePath}不存在");
+            return false;
+        }
+
+        //移除旧的GameDLL文件
+        foreach (string fileNmae in Directory.GetFiles(gameDllTargetPath))
+        {
+            if (!fileNmae.Contains(".json"))
+            {
+                File.Delete(fileNmae);
+            }
         }
 
         //根据配置列表拷贝新的GameDLL
@@ -155,6 +164,9 @@ public class BuildHelper
             File.Copy(copySourcePath, copyTagetPath);
         }
         AssetDatabase.Refresh();
+
+        Debug.Log("生成HotDll件并复制进文件夹");
+
         return true;
     }
 
