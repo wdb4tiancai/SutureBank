@@ -89,29 +89,29 @@ namespace UIFramework.Editor
                             }
                             SupportedTypeData td = null;
                             try { td = func(); } catch (Exception e) { Debug.LogException(e); }
-                            if (td == null || td.type == null) { continue; }
-                            if (!td.type.IsSubclassOf(tComponent))
+                            if (td == null || td.Type == null) { continue; }
+                            if (!td.Type.IsSubclassOf(tComponent))
                             {
-                                Debug.LogErrorFormat("Type should be sub class of 'Component' ! Error type : '{0}' .", td.type.FullName);
+                                Debug.LogErrorFormat("Type should be sub class of 'Component' ! Error type : '{0}' .", td.Type.FullName);
                                 continue;
                             }
-                            string showName = td.showName;
-                            if (string.IsNullOrEmpty(showName)) { showName = td.type.Name; }
-                            string codeTypeName = td.codeTypeName;
-                            string nameSpace = td.nameSpace;
+                            string showName = td.ShowName;
+                            if (string.IsNullOrEmpty(showName)) { showName = td.Type.Name; }
+                            string codeTypeName = td.CodeTypeName;
+                            string nameSpace = td.NameSpace;
                             if (string.IsNullOrEmpty(codeTypeName))
                             {
-                                codeTypeName = td.type.Name;
-                                nameSpace = td.type.Namespace;
+                                codeTypeName = td.Type.Name;
+                                nameSpace = td.Type.Namespace;
                             }
-                            string variableName = td.variableName;
+                            string variableName = td.VariableName;
                             if (string.IsNullOrEmpty(variableName))
                             {
-                                variableName = td.type.Name;
+                                variableName = td.Type.Name;
                                 variableName = variableName.Substring(0, 1).ToLower() + variableName.Substring(1);
                             }
-                            td = new SupportedTypeData(td.type, td.priority, showName, nameSpace, codeTypeName, variableName);
-                            SupportedTypeDatas.Add(td.type.GetHashCode(), td);
+                            td = new SupportedTypeData(td.Type, td.Priority, showName, nameSpace, codeTypeName, variableName);
+                            SupportedTypeDatas.Add(td.Type.GetHashCode(), td);
                         }
                     }
                 }
@@ -122,8 +122,8 @@ namespace UIFramework.Editor
 
         internal static int SortSupportedTypeDatas(SupportedTypeData l, SupportedTypeData r)
         {
-            if (l.priority == r.priority) { return string.Compare(l.type.Name, r.type.Name); }
-            return l.priority < r.priority ? -1 : 1;
+            if (l.Priority == r.Priority) { return string.Compare(l.Type.Name, r.Type.Name); }
+            return l.Priority < r.Priority ? -1 : 1;
         }
     }
 }

@@ -11,6 +11,16 @@ using UnityEngine;
 
 namespace UIFramework.Editor
 {
+    //组件显示对象
+    internal struct ObjectComponentsWithIndent
+    {
+        //是否显示缩进
+        public int Indent;
+        //组件对象
+        public ObjectComponents Components;
+
+        public string FieldKey;
+    }
 
     public class UIEditor : EditorWindow
     {
@@ -178,7 +188,7 @@ namespace UIFramework.Editor
                                     break;
                                 }
                             }
-                            CodeProperties cp = CodePropertiesMgr.CheckCodeAtPath(string.Concat(Path.Combine(findPath, m_RootComponents.ClassName), ".cs"));
+                            CodeProperties cp = CodePropertiesMgr.ReadCodeInformationByPath(string.Concat(Path.Combine(findPath, m_RootComponents.ClassName), ".cs"));
                             if (cp != null && cp.ClassName == m_RootComponents.ClassName)
                             {
                                 for (int i = 0; i < m_NameSpaceList.Length; i++)
@@ -228,7 +238,7 @@ namespace UIFramework.Editor
                             CodeProperties cp = null;
                             if (!string.IsNullOrEmpty(findPath) && !string.IsNullOrEmpty(ocwi.Components.ClassName))
                             {
-                                cp = CodePropertiesMgr.CheckCodeAtPath(string.Concat(Path.Combine(findPath, ocwi.Components.ClassName), ".cs"));
+                                cp = CodePropertiesMgr.ReadCodeInformationByPath(string.Concat(Path.Combine(findPath, ocwi.Components.ClassName), ".cs"));
                             }
                             if (cp != null && cp.ClassName == ocwi.Components.ClassName)
                             {
@@ -322,7 +332,7 @@ namespace UIFramework.Editor
                 for (int j = 0; j < cCount; j++)
                 {
                     ComponentData cd = ocs[j];
-                    EditorGUILayout.ObjectField(cd.Type.showName, cd.Component, cd.Type.type, true);
+                    EditorGUILayout.ObjectField(cd.Type.ShowName, cd.Component, cd.Type.Type, true);
                 }
                 if (ocs.ChildComponents != null)
                 {
@@ -371,12 +381,12 @@ namespace UIFramework.Editor
 
 
                 if (!folder.EndsWith("/")) { folder = folder + "/"; }
-                List<CodeObject> codes = ObjectCodeGen.GetCodes(m_RootComponents, ns);
+                List<CodeObject> codes = ObjectCodeGen.GenerateCodeFile(m_RootComponents, ns);
                 bool flag = false;
                 for (int i = 0, imax = codes.Count; i < imax; i++)
                 {
                     CodeObject code = codes[i];
-                    string path = string.Concat(folder, code.filename);
+                    string path = string.Concat(folder, code.ClassFileName);
                     string fileMd5 = null;
                     if (File.Exists(path))
                     {
@@ -389,7 +399,7 @@ namespace UIFramework.Editor
                         }
                         catch (Exception e) { Debug.LogException(e); }
                     }
-                    byte[] bytes = Encoding.UTF8.GetBytes(code.code);
+                    byte[] bytes = Encoding.UTF8.GetBytes(code.ClassCode);
                     bool toWrite = true;
                     if (!string.IsNullOrEmpty(fileMd5))
                     {

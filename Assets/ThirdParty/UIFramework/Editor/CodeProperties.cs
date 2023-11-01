@@ -37,7 +37,12 @@ namespace UIFramework.Editor
         static Regex m_RegSubclassStart = new Regex(@"\[System\.Serializable\]");
         static Regex m_RegPublicProperty = new Regex(@"public\s+\S+\s+\S+\s*\{\s*get\s*\{\s*return\s+\S+\s*;\s*\}\s*\}");
 
-        internal static CodeProperties CheckCodeAtPath(string path)
+        /// <summary>
+        /// 通过代码所在目录，读取代码的基本信息
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns>CodeProperties</returns>
+        internal static CodeProperties ReadCodeInformationByPath(string path)
         {
             if (!File.Exists(path)) { return null; }
             string code = null;
@@ -72,6 +77,4 @@ namespace UIFramework.Editor
             return cp;
         }
     }
-
-
 }

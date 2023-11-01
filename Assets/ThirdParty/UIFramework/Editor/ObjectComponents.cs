@@ -19,18 +19,12 @@ namespace UIFramework.Editor
         public Component Component;
     }
 
-    internal struct ObjectComponentsWithIndent
-    {
-        public int Indent;
-        public ObjectComponents Components;
-        public string FieldKey;
-    }
-
+    //组件的信息
     internal class ObjectComponents
     {
 
         /// <summary>
-        /// 类型？？
+        /// 类型
         /// </summary>
         public Type Type;
 
@@ -65,12 +59,12 @@ namespace UIFramework.Editor
         public readonly string Name;
 
         /// <summary>
-        /// 类名？？
+        /// 类名
         /// </summary>
         public readonly string ClassName;
 
         /// <summary>
-        /// 类的字段名？？
+        /// 类的字段名
         /// </summary>
         public readonly string ClassVarName;
 

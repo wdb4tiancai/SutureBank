@@ -9,20 +9,20 @@ namespace UIFramework.Editor
 
     public class SupportedTypeData
     {
-        public readonly Type type;
-        public readonly int priority;
-        public readonly string showName;
-        public readonly string nameSpace;
-        public readonly string codeTypeName;
-        public readonly string variableName;
+        public readonly Type Type;
+        public readonly int Priority;
+        public readonly string ShowName;
+        public readonly string NameSpace;
+        public readonly string CodeTypeName;
+        public readonly string VariableName;
         public SupportedTypeData(Type type, int priority, string showName, string nameSpace, string codeTypeName, string variableName)
         {
-            this.type = type;
-            this.priority = priority;
-            this.showName = showName;
-            this.nameSpace = nameSpace;
-            this.codeTypeName = codeTypeName;
-            this.variableName = variableName;
+            this.Type = type;
+            this.Priority = priority;
+            this.ShowName = showName;
+            this.NameSpace = nameSpace;
+            this.CodeTypeName = codeTypeName;
+            this.VariableName = variableName;
         }
     }
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 
@@ -8,7 +9,6 @@ namespace UIFramework
     [System.Serializable]
     public class Transform_Container
     {
-
         [SerializeField]
         private GameObject m_GameObject;
         public GameObject gameObject { get { return m_GameObject; } }
@@ -25,7 +25,6 @@ namespace UIFramework
     [System.Serializable]
     public class RectTransform_Container
     {
-
         [SerializeField]
         private GameObject m_GameObject;
         public GameObject gameObject { get { return m_GameObject; } }
@@ -58,10 +57,20 @@ namespace UIFramework
 
         public void SetSprite(Sprite sprite, bool withActive = false)
         {
+            image.sprite = sprite;
+            image.enabled = sprite != null;
+            if (withActive)
+            {
+                image.gameObject.SetActive(image.enabled);
+            }
         }
 
         public void SetSpriteLookActive(Sprite sprite)
         {
+            if (m_image.enabled)
+            {
+                SetSprite(sprite);
+            }
         }
 
         public void SetActive(bool val)
@@ -71,6 +80,7 @@ namespace UIFramework
 
         public void SetFillAmount(double val, double max)
         {
+            image.fillAmount = (float)(Math.Abs(max) > double.Epsilon ? val / max : 0);
         }
 
         public void SetAlphaA(float a)
@@ -135,6 +145,7 @@ namespace UIFramework
 
         public void SetOnClick(UnityAction action)
         {
+            m_button.onClick.AddListener(action);
         }
 
         public void SetActive(bool val)
@@ -144,6 +155,12 @@ namespace UIFramework
 
         public void SetSprite(Sprite sprite, bool withActive = false)
         {
+            image.sprite = sprite;
+            image.enabled = sprite != null;
+            if (withActive)
+            {
+                image.gameObject.SetActive(image.enabled);
+            }
         }
 
         public void SetAlphaA(float a)
@@ -196,18 +213,12 @@ namespace UIFramework
 
         public void SetText(string val)
         {
-        }
-
-        public void SetTextFormat(double val)
-        {
+            text.text = val;
         }
 
         public void SetText(int val)
         {
-        }
-
-        public void SetTips(int tipsId, params object[] args)
-        {
+            text.text = val.ToString();
         }
 
         public void SetTextColor(Color col)
@@ -217,6 +228,7 @@ namespace UIFramework
 
         public void ClearText()
         {
+            text.text = string.Empty;
         }
     }
 
@@ -270,6 +282,8 @@ namespace UIFramework
 
         public void SetOnClick(UnityAction action)
         {
+            m_button.onClick.RemoveAllListeners();
+            m_button.onClick.AddListener(action);
         }
 
         public void SetActive(bool val)

@@ -8,6 +8,11 @@ namespace UIFramework.Editor
 {
     public class ObjectSerialize
     {
+        /// <summary>
+        /// 序列号ui预制上的代码
+        /// </summary>
+        /// <param name="ns"></param>
+        /// <param name="ocs"></param>
         internal static void SerializeObject(string ns, ObjectComponents ocs)
         {
             Queue<ObjectComponents> components = new Queue<ObjectComponents>();
@@ -66,11 +71,11 @@ namespace UIFramework.Editor
                         {
                             ComponentData cd = ioc[j];
                             //Log.dt(ioc.name, cd.type.codeTypeName + " " + cd.type.variableName);
-                            SerializedProperty pComponent = pObj.FindPropertyRelative("m_" + cd.Type.variableName);
+                            SerializedProperty pComponent = pObj.FindPropertyRelative("m_" + cd.Type.VariableName);
                             if (pComponent == null)
                             {
                                 Debug.LogErrorFormat(cd.Component, "Cannot Find property for Component '{0}' at '{1}' !",
-                                    cd.Type.variableName, ioc.Obj.name);
+                                    cd.Type.VariableName, ioc.Obj.name);
                                 continue;
                             }
                             pComponent.objectReferenceValue = cd.Component;

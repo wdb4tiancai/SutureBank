@@ -8,6 +8,9 @@ namespace UIFramework.Editor
 {
     internal class GenType
     {
+        /// <summary>
+        /// 类成员的类型限定
+        /// </summary>
         public static HashSet<string> types = new HashSet<string>()
         {
             "RectTransform_Button_Image_Container",
@@ -16,44 +19,87 @@ namespace UIFramework.Editor
             "RectTransform_Text_Container",
         };
     }
+
+    //生成的代码类对象
     internal class CodeObject
     {
-        public readonly string filename;
-        public readonly string code;
-        public readonly GUIContent codeContent;
+        /// <summary>
+        /// 代码的文件名字
+        /// </summary>
+        public readonly string ClassFileName;
+        /// <summary>
+        /// 类的代码内容
+        /// </summary>
+        public readonly string ClassCode;
+
         public CodeObject(string filename, string code)
         {
-            this.filename = filename;
-            this.code = code;
-            codeContent = new GUIContent(code);
+            this.ClassFileName = filename;
+            this.ClassCode = code;
         }
     }
+
+    //需要生成的类数据信息
     internal class ClassData
     {
-        public List<string> usings = new List<string>();
-        public string cls;
-        public string baseClass;
-        public bool partialClass;
-        public bool publicProperty;
-        public List<FieldData> fields = new List<FieldData>();
+        /// <summary>
+        /// 命名空间
+        /// </summary>
+        public List<string> Usings = new List<string>();
+
+        /// <summary>
+        /// 类名
+        /// </summary>
+        public string ClassName;
+
+        /// <summary>
+        /// 基类名字
+        /// </summary>
+        public string BaseClass;
+
+        /// <summary>
+        /// 是否是分部类
+        /// </summary>
+        public bool IsPartialClass;
+
+        /// <summary>
+        /// 是否公共属性
+        /// </summary>
+        public bool IsPublicProperty;
+
+        /// <summary>
+        /// 数据成员
+        /// </summary>
+        public List<FieldData> Fields = new List<FieldData>();
     }
 
+    //类成员类
     internal class FieldData
     {
-        public string name;
-        public string itemType;
-        public string itemVar;
-        public List<SupportedTypeData> components = new List<SupportedTypeData>();
+        //成员的名字
+        public string Name;
+        //子集对象的名字
+        public string ItemType;
+        //子集对象的值
+        public string ItemVar;
+        //成员的组件列表
+        public List<SupportedTypeData> Components = new List<SupportedTypeData>();
     }
 
     public class ObjectCodeGen
     {
 
-        static private Dictionary<string, string> nsCache = new Dictionary<string, string>();
+        static private Dictionary<string, string> m_NameSpaceCache = new Dictionary<string, string>();
 
-        internal static List<CodeObject> GetCodes(ObjectComponents rootComponents, string ns)
+        /// <summary>
+        /// 生成代码文件
+        /// </summary>
+        /// <param name="rootComponents"></param>
+        /// <param name="ns"></param>
+        /// <returns></returns>
+        internal static List<CodeObject> GenerateCodeFile(ObjectComponents rootComponents, string ns)
         {
-            nsCache.Clear();
+            m_NameSpaceCache.Clear();
             List<CodeObject> codes = new List<CodeObject>();
             if (rootComponents == null) { return codes; }
             List<ClassData> clses = new List<ClassData>();
@@ -67,7 +113,7 @@ namespace UIFramework.Editor
                 ClassData cd = null;
                 for (int i = clses.Count - 1; i >= 0; i--)
                 {
-                    if (clses[i].cls == ocs.ClassName)
+                    if (clses[i].ClassName == ocs.ClassName)
                     {
                         cd = clses[i];
                         break;
@@ -76,17 +122,13 @@ namespace UIFramework.Editor
                 if (cd == null)
                 {
                     cd = new ClassData();
-                    cd.cls = ocs.ClassName;
+                    cd.ClassName = ocs.ClassName;
                     clses.Add(cd);
                 }
-                if (!GetClass(ocs, cd))
+                if (!GetClassDataByObjectComponents(ocs, cd))
                 {
                     // TODO class not match...
                 }
-                /*string code = GetCode(ns, ocs);
-                if (!string.IsNullOrEmpty(code)) {
-                    codes.Add(new CodeObject(string.Concat(ocs.cls, ".cs"), code));
-                }*/
                 for (int i = 0, imax = itemComponents.Count; i < imax; i++)
                 {
                     ObjectComponents ioc = itemComponents[i];
@@ -98,40 +140,47 @@ namespace UIFramework.Editor
 
             for (int i = 0, imax = clses.Count; i < imax; i++)
             {
-                nsCache.Add(clses[i].cls, clses[i].baseClass);
+                m_NameSpaceCache.Add(clses[i].ClassName, clses[i].BaseClass);
             }
 
             for (int i = 0, imax = clses.Count; i < imax; i++)
             {
                 ClassData cls = clses[i];
-                for (int j = cls.fields.Count - 1; j >= 0; j--)
+                for (int j = cls.Fields.Count - 1; j >= 0; j--)
                 {
-                    cls.fields[j].components.Sort(typeSorter);
+                    cls.Fields[j].Components.Sort(typeSorter);
                 }
-                string code = GetCode(ns, clses[i]);
+                string code = GenerateCodeFileByClassData(ns, clses[i]);
                 if (!string.IsNullOrEmpty(code))
                 {
-                    codes.Add(new CodeObject(string.Concat(cls.cls, ".cs"), code));
+                    codes.Add(new CodeObject(string.Concat(cls.ClassName, ".cs"), code));
                 }
             }
             return codes;
         }
-        private static bool GetClass(ObjectComponents ocs, ClassData cls)
+
+        /// <summary>
+        /// 根据ObjectComponents 给 ClassData赋值
+        /// </summary>
+        /// <param name="ocs"></param>
+        /// <param name="classData"></param>
+        /// <returns></returns>
+        private static bool GetClassDataByObjectComponents(ObjectComponents ocs, ClassData classData)
         {
-            if (cls.cls != ocs.ClassName) { return false; }
-            if (cls.baseClass != null && cls.baseClass != ocs.BaseClass) { return false; }
-            cls.baseClass = ocs.BaseClass;
-            cls.partialClass |= ocs.IsPartialClass;
-            cls.publicProperty |= ocs.IsPublicProperty;
+            if (classData.ClassName != ocs.ClassName) { return false; }
+            if (classData.BaseClass != null && classData.BaseClass != ocs.BaseClass) { return false; }
+            classData.BaseClass = ocs.BaseClass;
+            classData.IsPartialClass |= ocs.IsPartialClass;
+            classData.IsPublicProperty |= ocs.IsPublicProperty;
             List<ObjectComponents> objComponents = ocs.ChildComponents;
             for (int i = 0, imax = objComponents.Count; i < imax; i++)
             {
                 ObjectComponents oc = objComponents[i];
                 FieldData field = null;
-                for (int j = cls.fields.Count - 1; j >= 0; j--)
+                for (int j = classData.Fields.Count - 1; j >= 0; j--)
                 {
-                    FieldData f = cls.fields[j];
-                    if (f.name == oc.Name)
+                    FieldData f = classData.Fields[j];
+                    if (f.Name == oc.Name)
                     {
                         field = f;
                         break;
@@ -140,29 +189,29 @@ namespace UIFramework.Editor
                 if (field == null)
                 {
                     field = new FieldData();
-                    field.name = oc.Name;
-                    field.itemType = null;
-                    cls.fields.Add(field);
+                    field.Name = oc.Name;
+                    field.ItemType = null;
+                    classData.Fields.Add(field);
                 }
                 for (int j = 0, jmax = oc.Count; j < jmax; j++)
                 {
                     SupportedTypeData type = oc[j].Type;
-                    for (int k = field.components.Count - 1; k >= 0; k--)
+                    for (int k = field.Components.Count - 1; k >= 0; k--)
                     {
-                        if (field.components[k].showName == type.showName)
+                        if (field.Components[k].ShowName == type.ShowName)
                         {
                             type = null;
                             break;
                         }
                     }
-                    if (type != null) { field.components.Add(type); }
+                    if (type != null) { field.Components.Add(type); }
                 }
                 if (oc.ChildComponents != null)
                 {
                     string itemClass = oc.ClassName;
-                    for (int k = field.components.Count - 1; k >= 0; k--)
+                    for (int k = field.Components.Count - 1; k >= 0; k--)
                     {
-                        if (field.components[k].showName == itemClass)
+                        if (field.Components[k].ShowName == itemClass)
                         {
                             itemClass = null;
                             break;
@@ -170,65 +219,72 @@ namespace UIFramework.Editor
                     }
                     if (itemClass != null)
                     {
-                        field.components.Add(new SupportedTypeData(null, 10000, oc.ClassName, null, oc.ClassName, oc.ClassVarName));
-                        field.itemType = oc.ClassName;
-                        field.itemVar = oc.ClassVarName;
+                        field.Components.Add(new SupportedTypeData(null, 10000, oc.ClassName, null, oc.ClassName, oc.ClassVarName));
+                        field.ItemType = oc.ClassName;
+                        field.ItemVar = oc.ClassVarName;
                     }
                 }
             }
             return true;
         }
-        internal static string GetCode(string ns, ClassData cls)
+
+        /// <summary>
+        /// 根据ClassData数据，生成对应的代码类。
+        /// </summary>
+        /// <param name="nameSpaceName"></param>
+        /// <param name="classData"></param>
+        /// <returns></returns>
+        private static string GenerateCodeFileByClassData(string nameSpaceName, ClassData classData)
         {
             List<string> usings = new List<string>();
             SortedList<string, SupportedTypeData[]> dataClasses = new SortedList<string, SupportedTypeData[]>();
             StringBuilder code = new StringBuilder();
             Dictionary<string, KeyValuePair<string, string>> itemClasses = new Dictionary<string, KeyValuePair<string, string>>();
             string codeIndent = "";
-            if (!string.IsNullOrEmpty(ns))
+            if (!string.IsNullOrEmpty(nameSpaceName))
             {
                 codeIndent = "\t";
-                code.AppendLine(string.Format("namespace {0} {{", ns));
+                code.AppendLine(string.Format("namespace {0} {{", nameSpaceName));
                 code.AppendLine();
             }
             code.AppendLine(string.Format("{0}public {1}class {2} : {3} {{",
-                codeIndent, cls.partialClass ? "partial " : "", cls.cls, cls.baseClass));
+                codeIndent, classData.IsPartialClass ? "partial " : "", classData.ClassName, classData.BaseClass));
             code.AppendLine();
             List<string> tempStrings = new List<string>();
-            for (int i = 0, imax = cls.fields.Count; i < imax; i++)
+            for (int i = 0, imax = classData.Fields.Count; i < imax; i++)
             {
-                FieldData field = cls.fields[i];
+                FieldData field = classData.Fields[i];
                 tempStrings.Clear();
-                for (int j = 0, jmax = field.components.Count; j < jmax; j++)
+                for (int j = 0, jmax = field.Components.Count; j < jmax; j++)
                 {
-                    SupportedTypeData typeData = field.components[j];
-                    tempStrings.Add(typeData.type == null ? typeData.codeTypeName : typeData.type.Name);
-                    if (!string.IsNullOrEmpty(typeData.nameSpace) && !usings.Contains(typeData.nameSpace))
+                    SupportedTypeData typeData = field.Components[j];
+                    tempStrings.Add(typeData.Type == null ? typeData.CodeTypeName : typeData.Type.Name);
+                    if (!string.IsNullOrEmpty(typeData.NameSpace) && !usings.Contains(typeData.NameSpace))
                     {
-                        usings.Add(typeData.nameSpace);
+                        usings.Add(typeData.NameSpace);
                     }
                 }
                 string objTypeName = string.Concat(string.Join("_", tempStrings.ToArray()), "_Container");
                 if (!dataClasses.ContainsKey(objTypeName))
                 {
-                    dataClasses.Add(objTypeName, field.components.ToArray());
+                    dataClasses.Add(objTypeName, field.Components.ToArray());
                 }
                 tempStrings.Clear();
                 code.AppendLine(string.Format("{0}\t[SerializeField]", codeIndent));
-                if (cls.publicProperty)
+                if (classData.IsPublicProperty)
                 {
-                    code.AppendLine(string.Format("{0}\tprivate {1} m_{2};", codeIndent, objTypeName, field.name));
+                    code.AppendLine(string.Format("{0}\tprivate {1} m_{2};", codeIndent, objTypeName, field.Name));
                     code.AppendLine(string.Format("{0}\tpublic {1} {2} {{ get {{ return m_{2}; }} }}",
-                        codeIndent, objTypeName, field.name));
+                        codeIndent, objTypeName, field.Name));
                 }
                 else
                 {
-                    code.AppendLine(string.Format("{0}\tprivate {1} {2};", codeIndent, objTypeName, field.name));
+                    code.AppendLine(string.Format("{0}\tprivate {1} {2};", codeIndent, objTypeName, field.Name));
                 }
                 code.AppendLine();
-                if (!string.IsNullOrEmpty(field.itemType) && !string.IsNullOrEmpty(field.itemVar) && !itemClasses.ContainsKey(objTypeName))
+                if (!string.IsNullOrEmpty(field.ItemType) && !string.IsNullOrEmpty(field.ItemVar) && !itemClasses.ContainsKey(objTypeName))
                 {
-                    itemClasses.Add(objTypeName, new KeyValuePair<string, string>(field.itemType, field.itemVar));
+                    itemClasses.Add(objTypeName, new KeyValuePair<string, string>(field.ItemType, field.ItemVar));
                 }
             }
 
@@ -240,7 +296,7 @@ namespace UIFramework.Editor
 
                 code.AppendLine(string.Format("{0}\t[System.Serializable]", codeIndent));
                 code.AppendLine(string.Format("{0}\t{1} class {2} {{",
-                    codeIndent, cls.publicProperty ? "public" : "private", kv.Key));
+                    codeIndent, classData.IsPublicProperty ? "public" : "private", kv.Key));
                 code.AppendLine();
                 code.AppendLine(string.Format("{0}\t\t[SerializeField]", codeIndent));
                 code.AppendLine(string.Format("{0}\t\tprivate GameObject m_GameObject;", codeIndent));
@@ -251,15 +307,15 @@ namespace UIFramework.Editor
                     SupportedTypeData typeData = kv.Value[i];
                     code.AppendLine(string.Format("{0}\t\t[SerializeField]", codeIndent));
                     code.AppendLine(string.Format("{0}\t\tprivate {1} m_{2};",
-                        codeIndent, typeData.codeTypeName, typeData.variableName));
+                        codeIndent, typeData.CodeTypeName, typeData.VariableName));
                     code.AppendLine(string.Format("{0}\t\tpublic {1} {2} {{ get {{ return m_{2}; }} }}",
-                        codeIndent, typeData.codeTypeName, typeData.variableName));
+                        codeIndent, typeData.CodeTypeName, typeData.VariableName));
                     code.AppendLine();
                 }
                 KeyValuePair<string, string> typeAndVar;
                 if (itemClasses.TryGetValue(kv.Key, out typeAndVar))
                 {
-                    bool isAutoList = nsCache.ContainsKey(typeAndVar.Key) && nsCache[typeAndVar.Key] == "DYBaseResUI";
+                    bool isAutoList = m_NameSpaceCache.ContainsKey(typeAndVar.Key) && m_NameSpaceCache[typeAndVar.Key] == "DYBaseResUI";
                     if (isAutoList)
                     {
                         code.AppendLine(string.Format("{0}\t\t[System.NonSerialized] public List<{1}> mCachedList = new List<{1}>();", codeIndent, typeAndVar.Key));
@@ -354,9 +410,9 @@ namespace UIFramework.Editor
                 KeyValuePair<string, string> typeAndVar;
                 if (itemClasses.TryGetValue(kv.Key, out typeAndVar))
                 {
-                    if (nsCache.ContainsKey(typeAndVar.Key))
+                    if (m_NameSpaceCache.ContainsKey(typeAndVar.Key))
                     {
-                        if (nsCache[typeAndVar.Key] != "DYBaseResUI")
+                        if (m_NameSpaceCache[typeAndVar.Key] != "DYBaseResUI")
                         {
                             _isAutoList = false;
                             break;
@@ -364,7 +420,7 @@ namespace UIFramework.Editor
                     }
                 }
             }
-            if (_isAutoList && cls.baseClass == "DYBaseUI")
+            if (_isAutoList && classData.BaseClass == "DYBaseUI")
             {
                 code.AppendLine(string.Format("{0}\tprotected override void OnReleaseList() {{", codeIndent));
                 foreach (KeyValuePair<string, SupportedTypeData[]> kv in dataClasses)
@@ -382,14 +438,14 @@ namespace UIFramework.Editor
 
             code.AppendLine(string.Format("{0}}}", codeIndent));
 
-            if (!string.IsNullOrEmpty(ns))
+            if (!string.IsNullOrEmpty(nameSpaceName))
             {
                 code.AppendLine();
                 code.AppendLine("}");
             }
             if (!usings.Contains("UnityEngine")) { usings.Add("UnityEngine"); }
             if (!usings.Contains("UIFramework")) { usings.Add("UIFramework"); }
-            if (!string.IsNullOrEmpty(ns)) { usings.Remove(ns); }
+            if (!string.IsNullOrEmpty(nameSpaceName)) { usings.Remove(nameSpaceName); }
             usings.Sort();
             StringBuilder codeUsings = new StringBuilder();
             for (int i = 0, imax = usings.Count; i < imax; i++)
