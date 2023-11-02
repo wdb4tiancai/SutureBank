@@ -1,4 +1,4 @@
-using System.Collections;
+ï»¿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Event;
@@ -20,19 +20,19 @@ public class LauncherBehaviour
     private readonly EventGroup _eventGroup = new EventGroup();
 
     /// <summary>
-    /// Ğ­³ÌÆô¶¯Æ÷
+    /// åç¨‹å¯åŠ¨å™¨
     /// </summary>
     public MonoBehaviour Behaviour;
 
 
     private LauncherBehaviour()
     {
-        // ×¢²á¼àÌıÊÂ¼ş
+        // æ³¨å†Œç›‘å¬äº‹ä»¶
         _eventGroup.AddListener<LauncherEventDefine.ChangeToLoginScene>(OnHandleEventMessage);
     }
 
     /// <summary>
-    /// ¿ªÆôÒ»¸öĞ­³Ì
+    /// å¼€å¯ä¸€ä¸ªåç¨‹
     /// </summary>
     public void StartCoroutine(IEnumerator enumerator)
     {
@@ -40,13 +40,13 @@ public class LauncherBehaviour
     }
 
     /// <summary>
-    /// ½ÓÊÕÊÂ¼ş
+    /// æ¥æ”¶äº‹ä»¶
     /// </summary>
     private void OnHandleEventMessage(IEventMessage message)
     {
         if (message is LauncherEventDefine.ChangeToLoginScene)
         {
-            YooAssets.LoadSceneAsync("SceneLogin");
+            YooAssets.LoadSceneAsync("EngineScene");
         }
     }
 }

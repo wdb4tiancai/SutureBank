@@ -88,7 +88,9 @@ namespace UIFramework
             }
             else
             {
+#if UI_FRAME_DEBUG
                 Debug.LogError("ui重复注册 : " + screen.name);
+#endif
             }
         }
 
@@ -103,7 +105,9 @@ namespace UIFramework
             }
             else
             {
+#if UI_FRAME_DEBUG
                 Debug.LogError("ui 注销不存在: " + screen.name);
+#endif
             }
         }
 

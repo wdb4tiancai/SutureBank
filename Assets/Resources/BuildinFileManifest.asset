@@ -20,5 +20,6 @@ MonoBehaviour:
   - assets_hotassets_hotupdatedll_hotupdatedllcfg_json.rawfile
   - assets_hotassets_prefabs_testcube.bundle
   - assets_hotassets_prefabs_testsphere.bundle
+  - assets_hotassets_prefabs_ui_mainui_mainui.bundle
   - assets_hotassets_prefabs_ui_uiframe.bundle
-  - assets_hotassets_scenes_scenelogin.bundle
+  - assets_hotassets_scenes_loginscene.bundle

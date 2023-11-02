@@ -2,7 +2,7 @@ using UIFramework;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GameUI {
+namespace Game.UI {
 
 	public partial class MainUi_aaa : BaseScreen {
 

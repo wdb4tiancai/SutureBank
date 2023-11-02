@@ -55,7 +55,9 @@ namespace UIFramework
         public void InitScreen(ScreenInfo screenInfo)
         {
             ScreenInfo = screenInfo;
+#if UI_FRAME_DEBUG
             Debug.LogError("初始化 " + Name);
+#endif
             OnInitScreen(screenInfo);
             IsVisible = false;
             gameObject.SetActive(false);
@@ -74,7 +76,9 @@ namespace UIFramework
         /// </summary>
         private void DestroyedScreen()
         {
+#if UI_FRAME_DEBUG
             Debug.LogError("销毁 " + Name);
+#endif
             InTransitionFinished = null;
             OutTransitionFinished = null;
             IsVisible = false;
@@ -95,7 +99,9 @@ namespace UIFramework
         /// </summary>
         public void ShowScreen(BaseScreenData screenData)
         {
+#if UI_FRAME_DEBUG
             Debug.LogError("显示 " + Name);
+#endif
             HierarchyFixOnShow();
             OnShowScreen(screenData);
         }
@@ -114,7 +120,9 @@ namespace UIFramework
         /// </summary>
         public void CloseScreen()
         {
+#if UI_FRAME_DEBUG
             Debug.LogError("关闭 " + Name);
+#endif
             OnCloseScreen();
         }
 
@@ -131,7 +139,9 @@ namespace UIFramework
         /// </summary>
         public void HideScreen()
         {
+#if UI_FRAME_DEBUG
             Debug.LogError("隐藏 " + Name);
+#endif
             OnHideScreen();
             IsVisible = false;
             gameObject.SetActive(false);
@@ -150,7 +160,9 @@ namespace UIFramework
         /// </summary>
         private void OnTransitionInFinished()
         {
+#if UI_FRAME_DEBUG
             Debug.LogError("进入事件 " + Name);
+#endif
             IsVisible = true;
             gameObject.SetActive(true);
             if (InTransitionFinished != null)
@@ -164,7 +176,9 @@ namespace UIFramework
         /// </summary>
         private void OnTransitionOutFinished()
         {
+#if UI_FRAME_DEBUG
             Debug.LogError("退出事件 " + Name);
+#endif
             IsVisible = false;
             gameObject.SetActive(false);
 
@@ -180,7 +194,6 @@ namespace UIFramework
         /// </summary>
         protected virtual void HierarchyFixOnShow()
         {
-            Debug.LogError("打开时层级调整" + Name);
             transform.SetAsLastSibling();
         }
     }

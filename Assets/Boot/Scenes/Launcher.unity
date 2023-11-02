@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6cb1d5b7b26978649ae82ba9c1ac4ea1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PlayMode: 1
+  PlayMode: 0
   AssetPackageName: DefaultPackage
   LauncherUiPath: LauncherUI
 --- !u!4 &1584505403
