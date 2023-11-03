@@ -12,15 +12,14 @@ namespace Game
         public async UniTask Init(Engine engine)
         {
             Engine = engine;
+            await ConfigMgr.Instance.Init(engine);
             await UiMgr.Instance.Init(engine);
+
             m_IsInit = true;
         }
         public void Destroy()
         {
-            if (!m_IsInit)
-            {
-                return;
-            }
+            ConfigMgr.Instance.Destroy();
             UiMgr.Instance.Destroy();
         }
         public void Update(float dt)

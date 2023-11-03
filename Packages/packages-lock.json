@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "216d09f7b65fadc5d8fcd0bba82e5ac50ca58f06"
     },
+    "com.code-philosophy.luban": {
+      "version": "https://github.com/focus-creative-games/luban_unity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "de0348c453844f91d52e736be681f0713ae47201"
+    },
     "com.tuyoogame.yooasset": {
       "version": "2.0.2-preview",
       "depth": 0,
