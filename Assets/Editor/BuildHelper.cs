@@ -6,6 +6,7 @@ using UnityEngine;
 using System.IO;
 using System.Collections.Generic;
 using LitJson;
+using System.Linq;
 
 public class BuildHelper
 {
@@ -50,7 +51,12 @@ public class BuildHelper
     [MenuItem("工具/打整包")]
     public static void Test()
     {
-
+        IReadOnlyList<string> assemblies = AOTGenericReferences.PatchedAOTAssemblyList;
+        for (int i = 0; i < assemblies.Count; i++)
+        {
+            Debug.LogError(assemblies[i]);
+        }
+        Debug.LogError(assemblies.ToArray());
     }
 
     [MenuItem("工具/生成AOTDll并复制进文件夹")]
@@ -58,7 +64,8 @@ public class BuildHelper
     {
         //先生成AOT文件
         PrebuildCommand.GenerateAll();
-
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
         //后拷贝文件
         string aotDllSourcePath = Path.Combine(ProjectPath, HotAotDllSourcePath, GetTargetPath());
         Debug.Log($"AOTDll来源目录 {aotDllSourcePath}");
@@ -76,11 +83,6 @@ public class BuildHelper
             return false;
         }
 
-        if (!File.Exists(aotDllCfgFilePath))
-        {
-            Debug.LogError($"AOTDll配置文件 {aotDllCfgFilePath}不存在");
-            return false;
-        }
 
         //移除旧的AotDLL文件
         foreach (string fileNmae in Directory.GetFiles(aotDllTargetPath))
@@ -91,12 +93,18 @@ public class BuildHelper
             }
         }
 
-        //根据配置列表拷贝新的AOTDLL
-        List<string> aotDllFileName = JsonMapper.ToObject<List<string>>(File.ReadAllText(aotDllCfgFilePath));
-        for (int i = 0; i < aotDllFileName.Count; i++)
+        //写新的配置文件
+        IReadOnlyList<string> assemblies = AOTGenericReferences.PatchedAOTAssemblyList;
+        File.WriteAllText(aotDllCfgFilePath, JsonMapper.ToJson(assemblies.ToList()));
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
+        //拷贝新的AOTDLL
+        for (int i = 0; i < assemblies.Count; i++)
         {
-            string copySourcePath = Path.Combine(aotDllSourcePath, aotDllFileName[i]);
-            string copyTagetPath = Path.Combine(aotDllTargetPath, aotDllFileName[i] + ".bytes");
+            string copySourcePath = Path.Combine(aotDllSourcePath, assemblies[i]);
+            string copyTagetPath = Path.Combine(aotDllTargetPath, assemblies[i] + ".bytes");
             if (!File.Exists(copySourcePath))
             {
                 Debug.LogError($"{copySourcePath} 不存在");
@@ -104,8 +112,7 @@ public class BuildHelper
             }
             File.Copy(copySourcePath, copyTagetPath);
         }
-
-
+        AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log("生成AOTDll并复制进文件夹");
         return true;

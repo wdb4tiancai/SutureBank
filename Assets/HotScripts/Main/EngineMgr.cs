@@ -1,6 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
 using Game.UI;
+using Game.Config;
 using UnityEngine;
+using Game.Audio;
+using Game.Res;
 
 namespace Game
 {
@@ -12,15 +15,18 @@ namespace Game
         public async UniTask Init(Engine engine)
         {
             Engine = engine;
+            ResMgr.Instance.Init(engine);
             await ConfigMgr.Instance.Init(engine);
+            AudioMgr.Instance.Init(engine);
             await UiMgr.Instance.Init(engine);
-
             m_IsInit = true;
         }
         public void Destroy()
         {
             ConfigMgr.Instance.Destroy();
             UiMgr.Instance.Destroy();
+            AudioMgr.Instance.Destroy();
+            ResMgr.Instance.Destroy();
         }
         public void Update(float dt)
         {

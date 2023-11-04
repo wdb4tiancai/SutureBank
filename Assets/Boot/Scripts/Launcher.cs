@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SharePublic;
+using System.Collections;
 using UniFramework.Event;
 using UnityEngine;
 using YooAsset;
@@ -30,6 +31,9 @@ public class Launcher : MonoBehaviour
     }
     void Start()
     {
+        //初始化资源包
+        AssetsVersion.AssetPackageName = AssetPackageName;
+
         // 游戏管理器
         LauncherBehaviour.Instance.Behaviour = this;
 

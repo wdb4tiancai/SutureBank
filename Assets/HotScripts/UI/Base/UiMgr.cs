@@ -25,21 +25,24 @@ namespace Game.UI
         private GameObject m_UIFrameObj;
         private UIFrame m_UIFrame;
         private AssetHandle m_UIFrameHandle;
-        private Engine m_Engin;
+        private Engine m_Engine;
         private bool m_IsInit = false;
         public async UniTask Init(Engine engine)
         {
-            m_Engin = engine;
-            AssetHandle m_UIFrameHandle = YooAssets.LoadAssetAsync<GameObject>("UIFrame");
-            await m_UIFrameHandle.Task;
-            m_UIFrameObj = m_UIFrameHandle.InstantiateSync();
-            m_UIFrameObj.transform.SetParent(engine.transform);
-            m_UIFrameObj.transform.SetAsLastSibling();
-            m_UIFrameObj.transform.localPosition = Vector3.zero;
-            m_UIFrameObj.transform.localScale = Vector3.one;
-            m_UIFrameObj.name = "UIFrame";
-            m_UIFrame = m_UIFrameObj.GetComponent<UIFrame>();
-            m_UIFrame.Initialize();
+            m_Engine = engine;
+            if (m_UIFrame == null)
+            {
+                AssetHandle m_UIFrameHandle = YooAssets.LoadAssetAsync<GameObject>("UIFrame");
+                await m_UIFrameHandle.Task;
+                m_UIFrameObj = m_UIFrameHandle.InstantiateSync();
+                m_UIFrameObj.transform.SetParent(engine.transform);
+                m_UIFrameObj.transform.SetAsLastSibling();
+                m_UIFrameObj.transform.localPosition = Vector3.zero;
+                m_UIFrameObj.transform.localScale = Vector3.one;
+                m_UIFrameObj.name = "UIFrame";
+                m_UIFrame = m_UIFrameObj.GetComponent<UIFrame>();
+                m_UIFrame.Initialize();
+            }
             m_IsInit = true;
             await OpenUiAsync("MainUi");
         }

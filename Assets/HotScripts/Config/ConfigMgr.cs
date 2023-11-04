@@ -7,16 +7,16 @@ using System;
 using System.Collections.Generic;
 using Luban;
 
-namespace Game.UI
+namespace Game.Config
 {
     public class ConfigMgr : SingletonBase<ConfigMgr>
     {
         private bool m_IsInit = false;
-        private Engine m_Engin;
+        private Engine m_Engine;
         private Game.Data.GameConfigs m_GameConfigs;
         public async UniTask Init(Engine engine)
         {
-            m_Engin = engine;
+            m_Engine = engine;
             m_GameConfigs = new Game.Data.GameConfigs();
             await m_GameConfigs.LoadRes(LoadByteBuf);
         }
