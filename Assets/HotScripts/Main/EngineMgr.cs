@@ -4,6 +4,7 @@ using Game.Config;
 using UnityEngine;
 using Game.Audio;
 using Game.Res;
+using Game.Scene;
 
 namespace Game
 {
@@ -15,14 +16,17 @@ namespace Game
         public async UniTask Init(Engine engine)
         {
             Engine = engine;
+            SceneMgr.Instance.Init(engine);
             ResMgr.Instance.Init(engine);
             await ConfigMgr.Instance.Init(engine);
             AudioMgr.Instance.Init(engine);
             await UiMgr.Instance.Init(engine);
             m_IsInit = true;
+            SceneMgr.Instance.ChangeToLoginScene();
         }
         public void Destroy()
         {
+            SceneMgr.Instance.Destroy();
             ConfigMgr.Instance.Destroy();
             UiMgr.Instance.Destroy();
             AudioMgr.Instance.Destroy();
@@ -34,6 +38,7 @@ namespace Game
             {
                 return;
             }
+            SceneMgr.Instance.Update(dt);
             UiMgr.Instance.Update(dt);
         }
 

@@ -200,7 +200,16 @@ namespace UIFramework
         }
 
         /// <summary>
-        /// 隐藏面板层上的所有屏幕
+        /// 关闭面板层上的所有屏幕,除了指定屏幕
+        /// </summary>
+        /// 
+        public void CloseAllPanelsExceptLoadingUi(string exceptUiName)
+        {
+            m_PanelLayer.CloseAllPanelsExceptLoadingUi(exceptUiName);
+        }
+
+        /// <summary>
+        /// 关闭面板层上的所有屏幕
         /// </summary>
         public void CloseAllPanels()
         {
@@ -208,7 +217,7 @@ namespace UIFramework
         }
 
         /// <summary>
-        /// 隐藏窗口层中的所有屏幕
+        /// 关闭窗口层中的所有屏幕
         /// </summary>
         public void CloseAllWindows()
         {

@@ -15,17 +15,21 @@ namespace Game.Data
     public partial class GameConfigs
     {
         public Tips Tips { get; private set; }
+        public UiCfg UiCfg { get; private set; }
 
         public async UniTask LoadRes(System.Func<string, UniTask<ByteBuf>> loader)
         {
             ByteBuf loadData = null;
             loadData = await loader("tips");
             Tips = new Tips(loadData);
+            loadData = await loader("uicfg");
+            UiCfg = new UiCfg(loadData);
             ResolveRef();
         }
         private void ResolveRef()
         {
             Tips.ResolveRef(this);
+            UiCfg.ResolveRef(this);
         }
     }
 

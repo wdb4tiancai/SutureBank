@@ -48,7 +48,7 @@ public class BuildHelper
 
     //public static string HotUpdateDllPath = string.Format("{0}HotUpdateDll/", HotUpdateAssetsPath);
 
-    [MenuItem("工具/打整包")]
+    [MenuItem("工具/打包工具/打整包")]
     public static void Test()
     {
         IReadOnlyList<string> assemblies = AOTGenericReferences.PatchedAOTAssemblyList;
@@ -59,7 +59,7 @@ public class BuildHelper
         Debug.LogError(assemblies.ToArray());
     }
 
-    [MenuItem("工具/生成AOTDll并复制进文件夹")]
+    [MenuItem("工具/打包工具/生成AOTDll并复制进文件夹")]
     public static bool GenerateAOTDllListFile()
     {
         //先生成AOT文件
@@ -118,7 +118,7 @@ public class BuildHelper
         return true;
     }
 
-    [MenuItem("工具/生成HotDll件并复制进文件夹")]
+    [MenuItem("工具/打包工具/生成HotDll件并复制进文件夹")]
     public static bool GenerateHotDllListFile()
     {
         //先生成AOT文件

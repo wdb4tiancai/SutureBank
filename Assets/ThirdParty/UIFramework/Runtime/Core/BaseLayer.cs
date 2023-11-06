@@ -67,13 +67,28 @@ namespace UIFramework
 
 
         /// <summary>
+        /// 关闭面板层上的所有屏幕,除了指定屏幕
+        /// </summary>
+        /// 
+        public void CloseAllPanelsExceptLoadingUi(string exceptUiName)
+        {
+            for (int i = m_ExistScreens.Count - 1; i >= 0; i--)
+            {
+                if (!m_ExistScreens[i].Name.Equals(exceptUiName))
+                {
+                    m_ExistScreens[i].CloseScreen();
+                }
+            }
+        }
+
+        /// <summary>
         /// 关闭所有
         /// </summary>
         public virtual void CloseAll()
         {
-            foreach (var screen in m_ExistScreens)
+            for (int i = m_ExistScreens.Count - 1; i >= 0; i--)
             {
-                screen.CloseScreen();
+                m_ExistScreens[i].CloseScreen();
             }
         }
 

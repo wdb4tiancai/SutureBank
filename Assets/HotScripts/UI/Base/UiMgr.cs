@@ -10,13 +10,16 @@ namespace Game.UI
 {
     public class UICfg
     {
-        public static string MainUi = "MainUi";
-        public static string DialogueUi = "DialogueUi";
+        public const string MainUi = "MainUi";
+        public const string LoadingUi = "LoadingUi";
+        public const string LoginUi = "LoginUi";
 
 
         public static Dictionary<string, ScreenInfo> UIInfo = new Dictionary<string, ScreenInfo>()
         {
             {MainUi,new ScreenInfo(){LayerId = 1,Name = "MainUi",ResPath = "MainUi" } },
+            {LoadingUi,new ScreenInfo(){LayerId = 5,Name = "LoadingUi",ResPath = "LoadingUi" } },
+            {LoginUi,new ScreenInfo(){LayerId = 1,Name = "LoginUi",ResPath = "LoginUi" } },
         };
     }
 
@@ -44,7 +47,6 @@ namespace Game.UI
                 m_UIFrame.Initialize();
             }
             m_IsInit = true;
-            await OpenUiAsync("MainUi");
         }
         public void Destroy()
         {
@@ -62,26 +64,32 @@ namespace Game.UI
         }
 
         //打开ui界面，异步的
-        public async UniTask OpenUiAsync(string uiName)
+        public async UniTask<BaseScreen> OpenUiAsync(string uiName)
         {
-            await OpenUiAsync(uiName, null);
+            return await OpenUiAsync(uiName, null);
         }
 
         //打开ui界面，异步的
-        public async UniTask OpenUiAsync(string uiName, BaseScreenData screenData)
+        public async UniTask<BaseScreen> OpenUiAsync(string uiName, BaseScreenData screenData)
         {
             ScreenInfo uiInfo;
             if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
-                Debug.LogError("error ====== ui not exit ==== " + uiName);
-                return;
+                Debug.LogError($" {uiName} 不存在 ");
+                return null;
             }
             AssetHandle m_UIObj = YooAssets.LoadAssetAsync<GameObject>(uiInfo.ResPath);
             await m_UIObj.Task;
             GameObject uiObj = m_UIObj.InstantiateSync();
             uiObj.name = uiName;
             BaseScreen baseScreen = uiObj.GetComponent<BaseScreen>();
+            if (baseScreen == null)
+            {
+                Debug.LogError($" {uiName} BaseScreen 不存在 ");
+                return null;
+            }
             m_UIFrame.OpenUi(baseScreen, uiInfo, screenData);
+            return baseScreen;
         }
 
         /// <summary>
@@ -112,6 +120,27 @@ namespace Game.UI
             m_UIFrame.CloseUi(screen);
         }
 
+        /// <summary>
+        /// 关闭所有UI,除了指定UI
+        /// </summary>
+        /// 
+        public void CloseAllUiExceptLoadingUi(string exceptUiName)
+        {
+            m_UIFrame.CloseAllPanelsExceptLoadingUi(exceptUiName);
+            m_UIFrame.CloseAllWindows();
+        }
+
+        //获得打开的ui
+        public BaseScreen GetOpenUi(string uiName)
+        {
+            ScreenInfo uiInfo;
+            if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
+            {
+                Debug.LogError("error ====== ui not exit ==== " + uiName);
+                return null;
+            }
+            return m_UIFrame.FindScreenByScreenInfo(uiInfo);
+        }
     }
 }
 
