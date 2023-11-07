@@ -1,10 +1,12 @@
-using UIFramework;
+﻿using UIFramework;
 using UnityEngine;
 
-namespace Game.UI {
+namespace Game.UI
+{
 
-	public partial class LoadingUi : BaseScreen {
+    public partial class LoadingUi : BaseUi
+    {
 
-	}
+    }
 
 }

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace UIFramework
 {
-    public class BaseScreen : MonoBehaviour
+    public abstract class BaseScreen : MonoBehaviour
     {
         /// <summary>
         /// 场景的配置信息
@@ -58,7 +58,7 @@ namespace UIFramework
 #if UI_FRAME_DEBUG
             Debug.LogError("初始化 " + Name);
 #endif
-            OnInitScreen(screenInfo);
+            OnInitScreen();
             IsVisible = false;
             gameObject.SetActive(false);
         }
@@ -67,9 +67,7 @@ namespace UIFramework
         /// 派生类初始化逻辑
         /// </summary>
         /// <param name="screenInfo"></param>
-        protected virtual void OnInitScreen(ScreenInfo screenInfo)
-        {
-        }
+        protected abstract void OnInitScreen();
 
         /// <summary>
         /// 销毁Screen
@@ -89,10 +87,7 @@ namespace UIFramework
         /// <summary>
         /// 派生类销毁逻辑
         /// </summary>
-        protected virtual void OnDestroyedScreen()
-        {
-
-        }
+        protected abstract void OnDestroyedScreen();
 
         /// <summary>
         /// 显示Screen
@@ -110,10 +105,7 @@ namespace UIFramework
         /// 派生类显示逻辑
         /// </summary>
         /// <param name="screenData"></param>
-        protected virtual void OnShowScreen(BaseScreenData screenData)
-        {
-            OnTransitionInFinished();
-        }
+        protected abstract void OnShowScreen(BaseScreenData screenData);
 
         /// <summary>
         /// 关闭Screen
@@ -129,10 +121,7 @@ namespace UIFramework
         /// <summary>
         /// 派生类关闭逻辑
         /// </summary>
-        protected virtual void OnCloseScreen()
-        {
-            OnTransitionOutFinished();
-        }
+        protected abstract void OnCloseScreen();
 
         /// <summary>
         /// 隐藏Screen
@@ -150,15 +139,12 @@ namespace UIFramework
         /// <summary>
         /// 派生类隐藏逻辑
         /// </summary>
-        protected virtual void OnHideScreen()
-        {
-
-        }
+        protected abstract void OnHideScreen();
 
         /// <summary>
         /// Screen进入事件
         /// </summary>
-        private void OnTransitionInFinished()
+        protected void OnTransitionInFinished()
         {
 #if UI_FRAME_DEBUG
             Debug.LogError("进入事件 " + Name);
@@ -174,7 +160,7 @@ namespace UIFramework
         /// <summary>
         /// Screen退出事件
         /// </summary>
-        private void OnTransitionOutFinished()
+        protected void OnTransitionOutFinished()
         {
 #if UI_FRAME_DEBUG
             Debug.LogError("退出事件 " + Name);

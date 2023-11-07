@@ -66,7 +66,7 @@ public class LauncherUI : MonoBehaviour
     {
         _slider = transform.Find("UIWindow/Slider").GetComponent<Slider>();
         _tips = transform.Find("UIWindow/Slider/txt_tips").GetComponent<Text>();
-        _tips.text = "Initializing the game world !";
+        SetTipsText("Initializing the game world !");
         _messageBoxObj = transform.Find("UIWindow/MessgeBox").gameObject;
         _messageBoxObj.SetActive(false);
 
@@ -99,7 +99,7 @@ public class LauncherUI : MonoBehaviour
         else if (message is LauncherEventDefine.LauncherStatesChange)
         {
             var msg = message as LauncherEventDefine.LauncherStatesChange;
-            _tips.text = msg.Tips;
+            SetTipsText(msg.Tips);
         }
         else if (message is LauncherEventDefine.FoundUpdateFiles)
         {
@@ -119,7 +119,7 @@ public class LauncherUI : MonoBehaviour
             _slider.value = (float)msg.CurrentDownloadCount / msg.TotalDownloadCount;
             string currentSizeMB = (msg.CurrentDownloadSizeBytes / 1048576f).ToString("f1");
             string totalSizeMB = (msg.TotalDownloadSizeBytes / 1048576f).ToString("f1");
-            _tips.text = $"{msg.CurrentDownloadCount}/{msg.TotalDownloadCount} {currentSizeMB}MB/{totalSizeMB}MB";
+            SetTipsText($"{msg.CurrentDownloadCount}/{msg.TotalDownloadCount} {currentSizeMB}MB/{totalSizeMB}MB");
         }
         else if (message is LauncherEventDefine.PackageVersionUpdateFailed)
         {
@@ -152,6 +152,11 @@ public class LauncherUI : MonoBehaviour
         }
     }
 
+
+    private void SetTipsText(string tipTex)
+    {
+        _tips.text = tipTex;
+    }
     /// <summary>
     /// 显示对话框
     /// </summary>

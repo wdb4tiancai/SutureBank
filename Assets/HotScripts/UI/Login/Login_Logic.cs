@@ -12,8 +12,9 @@ namespace Game.UI
         /// 初始化逻辑
         /// </summary>
         /// <param name="screenInfo"></param>
-        protected override void OnInitScreen(ScreenInfo screenInfo)
+        protected override void OnInitScreen()
         {
+            base.OnInitScreen();
             m_Button.SetOnClick(OnButton);
         }
 

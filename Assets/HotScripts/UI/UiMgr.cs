@@ -54,6 +54,8 @@ namespace Game.UI
             {
                 return;
             }
+            m_UIFrameHandle?.Release();
+            m_UIFrameHandle = null;
         }
         public void Update(float dt)
         {
@@ -64,13 +66,13 @@ namespace Game.UI
         }
 
         //打开ui界面，异步的
-        public async UniTask<BaseScreen> OpenUiAsync(string uiName)
+        public async UniTask<BaseUi> OpenUiAsync(string uiName)
         {
             return await OpenUiAsync(uiName, null);
         }
 
         //打开ui界面，异步的
-        public async UniTask<BaseScreen> OpenUiAsync(string uiName, BaseScreenData screenData)
+        public async UniTask<BaseUi> OpenUiAsync(string uiName, BaseScreenData screenData)
         {
             ScreenInfo uiInfo;
             if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
@@ -78,18 +80,19 @@ namespace Game.UI
                 Debug.LogError($" {uiName} 不存在 ");
                 return null;
             }
-            AssetHandle m_UIObj = YooAssets.LoadAssetAsync<GameObject>(uiInfo.ResPath);
-            await m_UIObj.Task;
-            GameObject uiObj = m_UIObj.InstantiateSync();
+            AssetHandle assetHandle = YooAssets.LoadAssetAsync<GameObject>(uiInfo.ResPath);
+            await assetHandle.Task;
+            GameObject uiObj = assetHandle.InstantiateSync();
             uiObj.name = uiName;
-            BaseScreen baseScreen = uiObj.GetComponent<BaseScreen>();
-            if (baseScreen == null)
+            BaseUi baseUi = uiObj.GetComponent<BaseUi>();
+            if (baseUi == null)
             {
                 Debug.LogError($" {uiName} BaseScreen 不存在 ");
                 return null;
             }
-            m_UIFrame.OpenUi(baseScreen, uiInfo, screenData);
-            return baseScreen;
+            baseUi.AssetHandle = assetHandle;
+            m_UIFrame.OpenUi(baseUi, uiInfo, screenData);
+            return baseUi;
         }
 
         /// <summary>
@@ -131,7 +134,7 @@ namespace Game.UI
         }
 
         //获得打开的ui
-        public BaseScreen GetOpenUi(string uiName)
+        public BaseUi GetOpenUi(string uiName)
         {
             ScreenInfo uiInfo;
             if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
@@ -139,7 +142,7 @@ namespace Game.UI
                 Debug.LogError("error ====== ui not exit ==== " + uiName);
                 return null;
             }
-            return m_UIFrame.FindScreenByScreenInfo(uiInfo);
+            return m_UIFrame.FindScreenByScreenInfo(uiInfo) as BaseUi;
         }
     }
 }

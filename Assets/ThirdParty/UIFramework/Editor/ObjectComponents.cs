@@ -31,7 +31,7 @@ namespace UIFramework.Editor
         /// <summary>
         /// 基类
         /// </summary>
-        public string BaseClass = "MonoBehaviour";
+        public string BaseClass = "BaseScreen";
 
         /// <summary>
         /// 基类的选择

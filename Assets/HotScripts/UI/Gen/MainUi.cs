@@ -5,7 +5,7 @@ using UnityEngine.UI;
 namespace Game.UI
 {
 
-    public partial class MainUi : BaseScreen
+    public partial class MainUi : BaseUi
     {
 
         [SerializeField]
