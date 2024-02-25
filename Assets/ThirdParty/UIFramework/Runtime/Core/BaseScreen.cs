@@ -6,7 +6,7 @@ namespace UIFramework
     public abstract class BaseScreen : MonoBehaviour
     {
         /// <summary>
-        /// 场景的配置信息
+        /// 配置信息
         /// </summary>
         public ScreenInfo ScreenInfo { get; private set; }
 

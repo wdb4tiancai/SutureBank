@@ -3,17 +3,22 @@ using YooAsset;
 
 namespace Game.UI
 {
-    public class BaseUi : BaseScreen
+    public partial class BaseUi : BaseScreen
     {
 
-        public AssetHandle AssetHandle { private get; set; }
+        public bool IsDestroyed = false;//ui节目是否删除
+        public AssetHandle AssetHandle { private get; set; }//ui界面自己的资源对象
 
         protected override void OnInitScreen()
         {
+            IsDestroyed = false;
+            InitUiLoadRes();
         }
 
         protected override void OnDestroyedScreen()
         {
+            IsDestroyed = true;
+            DestroyedUiLoadRes();
             AssetHandle?.Release();
             AssetHandle = null;
         }
