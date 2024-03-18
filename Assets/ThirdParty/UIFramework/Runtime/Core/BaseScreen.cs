@@ -56,7 +56,7 @@ namespace UIFramework
         {
             ScreenInfo = screenInfo;
 #if UI_FRAME_DEBUG
-            Debug.LogError("初始化 " + Name);
+            Debug.Log("初始化 " + Name);
 #endif
             OnInitScreen();
             IsVisible = false;
@@ -75,7 +75,7 @@ namespace UIFramework
         private void DestroyedScreen()
         {
 #if UI_FRAME_DEBUG
-            Debug.LogError("销毁 " + Name);
+            Debug.Log("销毁 " + Name);
 #endif
             InTransitionFinished = null;
             OutTransitionFinished = null;
@@ -95,7 +95,7 @@ namespace UIFramework
         public void ShowScreen(BaseScreenData screenData)
         {
 #if UI_FRAME_DEBUG
-            Debug.LogError("显示 " + Name);
+            Debug.Log("显示 " + Name);
 #endif
             HierarchyFixOnShow();
             OnShowScreen(screenData);
@@ -113,7 +113,7 @@ namespace UIFramework
         public void CloseScreen()
         {
 #if UI_FRAME_DEBUG
-            Debug.LogError("关闭 " + Name);
+            Debug.Log("关闭 " + Name);
 #endif
             OnCloseScreen();
         }
@@ -129,7 +129,7 @@ namespace UIFramework
         public void HideScreen()
         {
 #if UI_FRAME_DEBUG
-            Debug.LogError("隐藏 " + Name);
+            Debug.Log("隐藏 " + Name);
 #endif
             OnHideScreen();
             IsVisible = false;
@@ -147,7 +147,7 @@ namespace UIFramework
         protected void OnTransitionInFinished()
         {
 #if UI_FRAME_DEBUG
-            Debug.LogError("进入事件 " + Name);
+            Debug.Log("进入事件 " + Name);
 #endif
             IsVisible = true;
             gameObject.SetActive(true);
@@ -163,7 +163,7 @@ namespace UIFramework
         protected void OnTransitionOutFinished()
         {
 #if UI_FRAME_DEBUG
-            Debug.LogError("退出事件 " + Name);
+            Debug.Log("退出事件 " + Name);
 #endif
             IsVisible = false;
             gameObject.SetActive(false);

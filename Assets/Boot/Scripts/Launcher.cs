@@ -1,5 +1,4 @@
 ﻿using SharePublic;
-using System.Collections;
 using UniFramework.Event;
 using UnityEngine;
 using YooAsset;

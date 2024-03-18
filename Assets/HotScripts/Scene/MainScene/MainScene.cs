@@ -1,4 +1,7 @@
-﻿namespace Game.Scene
+﻿using Game.Util.AntiCheat;
+using UnityEngine;
+
+namespace Game.Scene
 {
     public class MainScene : BaseScene
     {

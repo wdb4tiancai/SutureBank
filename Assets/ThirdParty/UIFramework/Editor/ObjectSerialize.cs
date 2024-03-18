@@ -70,7 +70,7 @@ namespace UIFramework.Editor
                         for (int j = 0; j < cCount; j++)
                         {
                             ComponentData cd = ioc[j];
-                            //Log.dt(ioc.name, cd.type.codeTypeName + " " + cd.type.variableName);
+                            //AntiCheatHelper.dt(ioc.name, cd.type.codeTypeName + " " + cd.type.variableName);
                             SerializedProperty pComponent = pObj.FindPropertyRelative("m_" + cd.Type.VariableName);
                             if (pComponent == null)
                             {

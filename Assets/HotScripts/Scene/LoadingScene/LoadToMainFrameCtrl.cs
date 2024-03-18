@@ -17,13 +17,13 @@ namespace Game.Scene
         {
             base.Init();
             m_IsInit = true;
-            Debug.LogError("LoadToMainFrameCtrl Init");
+            Debug.Log("LoadToMainFrameCtrl Init");
         }
 
         public override void Destroy()
         {
             base.Destroy();
-            Debug.LogError("LoadToMainFrameCtrl Destroy");
+            Debug.Log("LoadToMainFrameCtrl Destroy");
         }
 
 

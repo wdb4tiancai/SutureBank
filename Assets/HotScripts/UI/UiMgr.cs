@@ -104,7 +104,7 @@ namespace Game.UI
             ScreenInfo uiInfo;
             if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
-                Debug.LogError("error ====== ui not exit ==== " + uiName);
+                Debug.LogError($" {uiName} 不存在 ");
                 return;
             }
             CloseUi(m_UIFrame.FindScreenByScreenInfo(uiInfo));
@@ -139,7 +139,7 @@ namespace Game.UI
             ScreenInfo uiInfo;
             if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
-                Debug.LogError("error ====== ui not exit ==== " + uiName);
+                Debug.LogError($" {uiName} 不存在 ");
                 return null;
             }
             return m_UIFrame.FindScreenByScreenInfo(uiInfo) as BaseUi;
