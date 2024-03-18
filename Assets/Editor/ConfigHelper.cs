@@ -27,11 +27,17 @@ public class ConfigHelper
         p.StartInfo.WorkingDirectory = Application.dataPath + "/../ExcelDatas/";
         p.Start();
         p.WaitForExit();
+        string output = p.StandardOutput.ReadToEnd();
+        UnityEngine.Debug.Log($"配置表生成\n {output}");
         if (p.ExitCode != 0)
         {
             UnityEngine.Debug.LogError("生成配置表失败");
             p.Close();
             return false;
+        }
+        else
+        {
+            UnityEngine.Debug.LogError("生成配置表成功");
         }
         p.Close();
         AssetDatabase.Refresh();

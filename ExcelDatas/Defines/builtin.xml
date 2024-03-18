@@ -23,4 +23,28 @@
         </mapper>
     </bean>
 	
+	<bean name="jfloat" valueType="1" sep=",">
+        <var name="value" type="int"/>        
+		<mapper target="client" codeTarget="cs-bin">
+            <option name="type" value="Game.Util.AntiCheat.JFloat"/>
+			<option name="constructor" value="ExternalTypeUtil.NewJFloat"/>
+        </mapper>
+    </bean>
+	
+	<bean name="jdouble" valueType="1" sep=",">
+        <var name="value" type="int"/>        
+		<mapper target="client" codeTarget="cs-bin">
+            <option name="type" value="Game.Util.AntiCheat.JDouble"/>
+			<option name="constructor" value="ExternalTypeUtil.NewJDouble"/>
+        </mapper>
+    </bean>
+	
+	<bean name="jlong" valueType="1" sep=",">
+        <var name="value" type="int"/>        
+		<mapper target="client" codeTarget="cs-bin">
+            <option name="type" value="Game.Util.AntiCheat.JLong"/>
+			<option name="constructor" value="ExternalTypeUtil.NewJLong"/>
+        </mapper>
+    </bean>
+	
 </module>
