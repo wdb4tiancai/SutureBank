@@ -11,3 +11,5 @@ dotnet %LUBAN_DLL% ^
     --conf %CONF_ROOT%\..\luban.conf ^
     -x outputCodeDir=%UNITY_PATH%\HotScripts\Config\Gen^
     -x outputDataDir=%UNITY_PATH%\HotAssets\Config
+	
+pause

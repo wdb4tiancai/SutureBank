@@ -19,6 +19,7 @@ namespace Game.Data
 			Id = _buf.ReadInt();
 			Name = _buf.ReadString();
 			Desc = _buf.ReadString();
+			Price = ExternalTypeUtil.NewJInt(jint.Deserializejint(_buf));
 		}
 
 		public static UiCfgItem DeserializeUiCfgItem(ByteBuf _buf)
@@ -38,12 +39,17 @@ namespace Game.Data
 		/// 描述
 		/// </summary>
 		public readonly string Desc;
+		/// <summary>
+		/// 价格
+		/// </summary>
+		public readonly Game.Util.AntiCheat.JInt Price;
 	   
 		public const int __ID__ = 1647474755;
 		public override int GetTypeId() => __ID__;
 
 		public  void ResolveRef(GameConfigs tables)
 		{
+			
 			
 			
 			
@@ -55,6 +61,7 @@ namespace Game.Data
 			+ "id:" + Id + ","
 			+ "name:" + Name + ","
 			+ "desc:" + Desc + ","
+			+ "price:" + Price + ","
 			+ "}";
 		}
 	}

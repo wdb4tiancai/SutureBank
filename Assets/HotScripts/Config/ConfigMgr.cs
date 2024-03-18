@@ -13,12 +13,12 @@ namespace Game.Config
     {
         private bool m_IsInit = false;
         private Engine m_Engine;
-        private Game.Data.GameConfigs m_GameConfigs;
+        public Game.Data.GameConfigs GameConfigs { get; private set; }
         public async UniTask Init(Engine engine)
         {
             m_Engine = engine;
-            m_GameConfigs = new Game.Data.GameConfigs();
-            await m_GameConfigs.LoadRes(LoadByteBuf);
+            GameConfigs = new Game.Data.GameConfigs();
+            await GameConfigs.LoadRes(LoadByteBuf);
         }
         public void Destroy()
         {

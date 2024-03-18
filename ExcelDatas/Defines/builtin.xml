@@ -14,4 +14,13 @@
         <var name="z" type="float"/>
         <var name="w" type="float"/>
     </bean>
+	
+	<bean name="jint" valueType="1" sep=",">
+        <var name="value" type="int"/>        
+		<mapper target="client" codeTarget="cs-bin">
+            <option name="type" value="Game.Util.AntiCheat.JInt"/>
+			<option name="constructor" value="ExternalTypeUtil.NewJInt"/>
+        </mapper>
+    </bean>
+	
 </module>
