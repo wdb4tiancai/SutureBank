@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,78 +9,69 @@ namespace Game.UI
 {
     public partial class BaseUi
     {
-        private List<UIResBaseHandle> m_UiLoadResHandles;//ui加载的资源列表
+        private List<AssetHandle> m_UiResAssetHandle;//ui加载的资源列表
         private void InitUiLoadRes()
         {
-            m_UiLoadResHandles = new List<UIResBaseHandle>(20);
+            m_UiResAssetHandle = new List<AssetHandle>(20);
         }
 
         private void DestroyedUiLoadRes()
         {
-            for (int i = 0; i < m_UiLoadResHandles.Count; i++)
+            for (int i = 0; i < m_UiResAssetHandle.Count; i++)
             {
-                m_UiLoadResHandles[i]?.Destroy();
+                m_UiResAssetHandle[i]?.Release();
             }
-            m_UiLoadResHandles.Clear();
-            m_UiLoadResHandles = null;
+            m_UiResAssetHandle.Clear();
         }
 
 
         //设置ui上使用的图片
-        public void SetImageSprite(Image image, string path, Action<Sprite> onComplete = null)
+        public async UniTaskVoid SetImageSprite(Image image, string resPath)
         {
-            if (image == null || path.Equals(string.Empty))
+            if (image == null || resPath.Equals(string.Empty))
             {
                 return;
             }
-            for (int i = 0; i < m_UiLoadResHandles.Count; i++)
+            AssetHandle resource = YooAssets.LoadAssetAsync<Sprite>(resPath);
+            if (resource == null)
             {
-                UIResImageHandle curHandle = m_UiLoadResHandles[i] as UIResImageHandle;
-                if (curHandle == null || curHandle.IsWaitComplete == false)
-                {
-                    continue;
-                }
-                if (image == curHandle.ImageTarget)
-                {
-                    if (path == curHandle.ResPath)
-                    {
-                        return;
-                    }
-                    curHandle.SetNotValid();
-                }
+                return;
             }
-            UIResImageHandle newHandle = new UIResImageHandle();
-            newHandle.Init(path);
-            newHandle.ImageTarget = image;
-            newHandle.OnComplete = onComplete;
-            m_UiLoadResHandles.Add(newHandle);
+            m_UiResAssetHandle.Add(resource);
+            await resource.Task;
+            if (resource.Status != EOperationStatus.Succeed)
+            {
+                return;
+            }
+            Sprite sprite = resource.AssetObject as Sprite;
+            if (image != null && sprite != null)
+            {
+                image.sprite = sprite;
+            }
         }
         //加载预制
-        public void LoadPrefab(string prefabPath, Transform prefabParent = null, Action<GameObject> onComplete = null)
+        public async UniTaskVoid LoadPrefab(string prefabPath, Transform prefabParent = null)
         {
+            if (prefabPath.Equals(string.Empty))
+            {
+                return;
+            }
             if (prefabParent == null) prefabParent = transform;
 
-            for (int i = 0; i < m_UiLoadResHandles.Count; i++)
+            AssetHandle resource = YooAssets.LoadAssetAsync<GameObject>(prefabPath);
+            if (resource == null)
             {
-                UIResPrefabHandle curHandle = m_UiLoadResHandles[i] as UIResPrefabHandle;
-                if (curHandle == null || curHandle.IsWaitComplete == false)
-                {
-                    continue;
-                }
-                if (prefabParent.GetInstanceID() == curHandle.PrefabParent.GetInstanceID())
-                {
-                    if (prefabPath == curHandle.ResPath)
-                    {
-                        return;
-                    }
-                    curHandle.SetNotValid();
-                }
+                return;
             }
-            UIResPrefabHandle newHandle = new UIResPrefabHandle();
-            newHandle.Init(prefabPath);
-            newHandle.PrefabParent = prefabParent;
-            newHandle.OnComplete = onComplete;
-            m_UiLoadResHandles.Add(newHandle);
+            m_UiResAssetHandle.Add(resource);
+            await resource.Task;
+            if (resource.Status != EOperationStatus.Succeed)
+            {
+                return;
+            }
+            GameObject prefab = resource.InstantiateSync();
+            prefab.transform.SetParent(prefabParent, false);
+            prefab.transform.localPosition = Vector3.zero;
         }
     }
 

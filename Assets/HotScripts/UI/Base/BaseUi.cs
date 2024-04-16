@@ -6,7 +6,7 @@ namespace Game.UI
     public partial class BaseUi : BaseScreen
     {
 
-        public bool IsDestroyed = false;//ui节目是否删除
+        public bool IsDestroyed = false;//ui界面是否删除
         public AssetHandle AssetHandle { private get; set; }//ui界面自己的资源对象
 
         protected override void OnInitScreen()
@@ -17,6 +17,10 @@ namespace Game.UI
 
         protected override void OnDestroyedScreen()
         {
+            if (IsDestroyed)
+            {
+                return;
+            }
             IsDestroyed = true;
             DestroyedUiLoadRes();
             AssetHandle?.Release();

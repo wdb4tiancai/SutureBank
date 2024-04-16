@@ -315,11 +315,6 @@ namespace UIFramework.Editor
                 KeyValuePair<string, string> typeAndVar;
                 if (itemClasses.TryGetValue(kv.Key, out typeAndVar))
                 {
-                    bool isAutoList = m_NameSpaceCache.ContainsKey(typeAndVar.Key) && m_NameSpaceCache[typeAndVar.Key] == "DYBaseResUI";
-                    if (isAutoList)
-                    {
-                        code.AppendLine(string.Format("{0}\t\t[System.NonSerialized] public List<{1}> mCachedList = new List<{1}>();", codeIndent, typeAndVar.Key));
-                    }
                     code.AppendLine(string.Format("{0}\t\tprivate Queue<{1}> mCachedInstances;", codeIndent, typeAndVar.Key));
                     code.AppendLine(string.Format("{0}\t\tpublic {1} GetInstance(bool ignoreSibling = false) {{", codeIndent, typeAndVar.Key));
                     code.AppendLine(string.Format("{0}\t\t\t{1} instance = null;", codeIndent, typeAndVar.Key));
@@ -330,10 +325,6 @@ namespace UIFramework.Editor
                     code.AppendLine(string.Format("{0}\t\t\t}}", codeIndent));
                     code.AppendLine(string.Format("{0}\t\t\tif (instance == null || instance.Equals(null)) {{", codeIndent));
                     code.AppendLine(string.Format("{0}\t\t\t\tinstance = Instantiate<{1}>(m_{2});", codeIndent, typeAndVar.Key, typeAndVar.Value));
-                    if (isAutoList)
-                    {
-                        code.AppendLine(string.Format("{0}\t\t\t\tinstance.InternalInit();", codeIndent));
-                    }
                     code.AppendLine(string.Format("{0}\t\t\t}}", codeIndent));
                     code.AppendLine(string.Format("{0}\t\t\tTransform t0 = m_{1}.transform;", codeIndent, typeAndVar.Value));
                     code.AppendLine(string.Format("{0}\t\t\tTransform t1 = instance.transform;", codeIndent));
@@ -346,12 +337,6 @@ namespace UIFramework.Editor
                     code.AppendLine(string.Format("{0}\t\t\t}}else{{", codeIndent));
                     code.AppendLine(string.Format("{0}\t\t\t\tt1.SetAsLastSibling();", codeIndent));
                     code.AppendLine(string.Format("{0}\t\t\t}}", codeIndent));
-                    if (isAutoList)
-                    {
-                        code.AppendLine(string.Format("{0}\t\t\tinstance.gameObject.SetActive(true);", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\tmCachedList.Add(instance);", codeIndent));
-                    }
-
                     code.AppendLine(string.Format("{0}\t\t\treturn instance;", codeIndent));
                     code.AppendLine(string.Format("{0}\t\t}}", codeIndent));
                     code.AppendLine(string.Format("{0}\t\tpublic bool CacheInstance({1} instance) {{", codeIndent, typeAndVar.Key));
@@ -373,65 +358,8 @@ namespace UIFramework.Editor
                     code.AppendLine(string.Format("{0}\t\t}}", codeIndent));
                     code.AppendLine();
 
-                    if (isAutoList)
-                    {
-                        code.AppendLine(string.Format("{0}\t\tpublic void CacheInstanceList() {{", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\tgameObject.SetActive(false);", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\tforeach (var instance in mCachedList){{", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\t\tCacheInstance(instance);", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\t}}", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\tmCachedList.Clear();", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t}}", codeIndent));
-                        code.AppendLine();
-
-                        code.AppendLine(string.Format("{0}\t\tpublic void ReleaseList() {{", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\tforeach (var instance in mCachedList){{", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\t\tif (instance != null){{", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\t\t\tinstance.InternalRelease();", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\t\t\tDestroy(instance.gameObject);", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\t\t}}", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\t}}", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t\tmCachedList.Clear();", codeIndent));
-                        code.AppendLine(string.Format("{0}\t\t}}", codeIndent));
-                        code.AppendLine();
-                    }
-
-
-
                     if (!usings.Contains("System.Collections.Generic")) { usings.Add("System.Collections.Generic"); }
                 }
-                code.AppendLine(string.Format("{0}\t}}", codeIndent));
-                code.AppendLine();
-            }
-
-            bool _isAutoList = true;
-            foreach (KeyValuePair<string, SupportedTypeData[]> kv in dataClasses)
-            {
-                KeyValuePair<string, string> typeAndVar;
-                if (itemClasses.TryGetValue(kv.Key, out typeAndVar))
-                {
-                    if (m_NameSpaceCache.ContainsKey(typeAndVar.Key))
-                    {
-                        if (m_NameSpaceCache[typeAndVar.Key] != "DYBaseResUI")
-                        {
-                            _isAutoList = false;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (_isAutoList && classData.BaseClass == "DYBaseUI")
-            {
-                code.AppendLine(string.Format("{0}\tprotected override void OnReleaseList() {{", codeIndent));
-                foreach (KeyValuePair<string, SupportedTypeData[]> kv in dataClasses)
-                {
-                    KeyValuePair<string, string> typeAndVar;
-                    if (itemClasses.TryGetValue(kv.Key, out typeAndVar))
-                    {
-                        code.AppendLine(string.Format("{0}\t\t{1}.ReleaseList();", codeIndent, typeAndVar.Value));
-                    }
-                }
-
                 code.AppendLine(string.Format("{0}\t}}", codeIndent));
                 code.AppendLine();
             }

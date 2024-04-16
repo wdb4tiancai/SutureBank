@@ -31,12 +31,12 @@ namespace UIFramework.Editor
         /// <summary>
         /// 基类
         /// </summary>
-        public string BaseClass = "BaseScreen";
+        public string BaseClass = "BaseUi";
 
         /// <summary>
         /// 基类的选择
         /// </summary>
-        public int BaseClassIndex;
+        public int BaseClassIndex = 0;
 
         /// <summary>
         /// 是否是分部类
