@@ -5,23 +5,12 @@ using YooAsset;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using Game.Config;
+using Game.Data;
 
 namespace Game.UI
 {
-    public class UICfg
-    {
-        public const string MainUi = "MainUi";
-        public const string LoadingUi = "LoadingUi";
-        public const string LoginUi = "LoginUi";
 
-
-        public static Dictionary<string, ScreenInfo> UIInfo = new Dictionary<string, ScreenInfo>()
-        {
-            {MainUi,new ScreenInfo(){LayerId = 1,Name = "MainUi",ResPath = "MainUi" } },
-            {LoadingUi,new ScreenInfo(){LayerId = 5,Name = "LoadingUi",ResPath = "LoadingUi" } },
-            {LoginUi,new ScreenInfo(){LayerId = 1,Name = "LoginUi",ResPath = "LoginUi" } },
-        };
-    }
 
     public class UiMgr : SingletonBase<UiMgr>
     {
@@ -32,10 +21,16 @@ namespace Game.UI
         private bool m_IsInit = false;
         public async UniTask Init(Engine engine)
         {
+            System.Collections.Generic.List<UiCfgItem> uiCfgItems = ConfigMgr.Instance.GameConfigs.UiCfg.DataList;
+            for (int i = 0; i < uiCfgItems.Count; i++)
+            {
+                UiCfgItem uiCfgItem = uiCfgItems[i];
+                UiCfg.AddUIInfo(uiCfgItem.LayerId, uiCfgItem.Id, uiCfgItem.ResPath);
+            }
             m_Engine = engine;
             if (m_UIFrame == null)
             {
-                AssetHandle m_UIFrameHandle = YooAssets.LoadAssetAsync<GameObject>("UIFrame");
+                AssetHandle m_UIFrameHandle = YooAssets.LoadAssetAsync<GameObject>("Base_UIFrame");
                 await m_UIFrameHandle.Task;
                 m_UIFrameObj = m_UIFrameHandle.InstantiateSync();
                 m_UIFrameObj.transform.SetParent(engine.transform);
@@ -75,7 +70,7 @@ namespace Game.UI
         public async UniTask<BaseUi> OpenUiAsync(string uiName, BaseScreenData screenData)
         {
             ScreenInfo uiInfo;
-            if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
+            if (!UiCfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
                 Debug.LogError($" {uiName} 不存在 ");
                 return null;
@@ -102,7 +97,7 @@ namespace Game.UI
         public void CloseUi(string uiName)
         {
             ScreenInfo uiInfo;
-            if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
+            if (!UiCfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
                 Debug.LogError($" {uiName} 不存在 ");
                 return;
@@ -137,7 +132,7 @@ namespace Game.UI
         public BaseUi GetOpenUi(string uiName)
         {
             ScreenInfo uiInfo;
-            if (!UICfg.UIInfo.TryGetValue(uiName, out uiInfo))
+            if (!UiCfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
                 Debug.LogError($" {uiName} 不存在 ");
                 return null;

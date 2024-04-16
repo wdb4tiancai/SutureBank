@@ -16,10 +16,9 @@ namespace Game.Data
 	{
 		public UiCfgItem(ByteBuf _buf) 
 		{
-			Id = _buf.ReadInt();
-			Name = _buf.ReadString();
-			Desc = _buf.ReadString();
-			Price = ExternalTypeUtil.NewJInt(jint.Deserializejint(_buf));
+			Id = _buf.ReadString();
+			LayerId = _buf.ReadInt();
+			ResPath = _buf.ReadString();
 		}
 
 		public static UiCfgItem DeserializeUiCfgItem(ByteBuf _buf)
@@ -28,21 +27,17 @@ namespace Game.Data
 		}
 
 		/// <summary>
-		/// 这是id
+		/// UI名字
 		/// </summary>
-		public readonly int Id;
+		public readonly string Id;
 		/// <summary>
-		/// 名字
+		/// 层级
 		/// </summary>
-		public readonly string Name;
+		public readonly int LayerId;
 		/// <summary>
-		/// 描述
+		/// 资源路径
 		/// </summary>
-		public readonly string Desc;
-		/// <summary>
-		/// 价格
-		/// </summary>
-		public readonly Game.Util.AntiCheat.JInt Price;
+		public readonly string ResPath;
 	   
 		public const int __ID__ = 1647474755;
 		public override int GetTypeId() => __ID__;
@@ -52,16 +47,14 @@ namespace Game.Data
 			
 			
 			
-			
 		}
 
 		public override string ToString()
 		{
 			return "{ "
 			+ "id:" + Id + ","
-			+ "name:" + Name + ","
-			+ "desc:" + Desc + ","
-			+ "price:" + Price + ","
+			+ "LayerId:" + LayerId + ","
+			+ "ResPath:" + ResPath + ","
 			+ "}";
 		}
 	}

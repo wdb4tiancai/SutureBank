@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 185f6993d5150494d98da50e26cb1c25, type: 3}
   m_Name: AssetBundleCollectorSetting
   m_EditorClassIdentifier: 
-  ShowPackageView: 1
-  ShowEditorAlias: 1
+  ShowPackageView: 0
+  ShowEditorAlias: 0
   UniqueBundleName: 1
   Packages:
   - PackageName: DefaultPackage
@@ -31,19 +31,6 @@ MonoBehaviour:
       Collectors:
       - CollectPath: Assets/HotAssets/Scenes
         CollectorGUID: 6070eae1192f2994887f2983a177d503
-        CollectorType: 0
-        AddressRuleName: AddressByFileName
-        PackRuleName: PackSeparately
-        FilterRuleName: CollectAll
-        AssetTags: 
-        UserData: 
-    - GroupName: Prefabs
-      GroupDesc: 
-      AssetTags: 
-      ActiveRuleName: EnableGroup
-      Collectors:
-      - CollectPath: Assets/HotAssets/Prefabs
-        CollectorGUID: f3a75bab60b64fc4bb1ff73760fc6423
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackSeparately
@@ -86,6 +73,19 @@ MonoBehaviour:
         CollectorType: 0
         AddressRuleName: AddressByFileName
         PackRuleName: PackRawFile
+        FilterRuleName: CollectAll
+        AssetTags: 
+        UserData: 
+    - GroupName: Ui
+      GroupDesc: 
+      AssetTags: 
+      ActiveRuleName: EnableGroup
+      Collectors:
+      - CollectPath: Assets/HotAssets/UI
+        CollectorGUID: 18350b4cbd94f7e468d01e9d20a523cc
+        CollectorType: 0
+        AddressRuleName: AddressByFolderAndFileName
+        PackRuleName: PackSeparately
         FilterRuleName: CollectAll
         AssetTags: 
         UserData: 

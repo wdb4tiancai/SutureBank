@@ -85,12 +85,12 @@ namespace Game.Scene
         //打开LoadUi和LoadScene
         private async UniTask OpenLoadingUIAndLoadLoadingScene()
         {
-            BaseUi loadingUi = UiMgr.Instance.GetOpenUi(UICfg.LoadingUi);
+            BaseUi loadingUi = UiMgr.Instance.GetOpenUi(UiCfg.LoadingUi);
             if (loadingUi == null)
             {
-                loadingUi = await UiMgr.Instance.OpenUiAsync(UICfg.LoadingUi);
+                loadingUi = await UiMgr.Instance.OpenUiAsync(UiCfg.LoadingUi);
             }
-            UiMgr.Instance.CloseAllUiExceptLoadingUi(UICfg.LoadingUi);
+            UiMgr.Instance.CloseAllUiExceptLoadingUi(UiCfg.LoadingUi);
             await ResMgr.Instance.LoadSceneAsync("LoadingScene");
         }
 

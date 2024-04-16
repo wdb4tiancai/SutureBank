@@ -14,12 +14,12 @@ namespace Game.Data
 {
 	public partial class UiCfg
 	{
-		private readonly System.Collections.Generic.Dictionary<int, UiCfgItem> _dataMap;
+		private readonly System.Collections.Generic.Dictionary<string, UiCfgItem> _dataMap;
 		private readonly System.Collections.Generic.List<UiCfgItem> _dataList;
 		
 		public UiCfg(ByteBuf _buf)
 		{
-			_dataMap = new System.Collections.Generic.Dictionary<int, UiCfgItem>();
+			_dataMap = new System.Collections.Generic.Dictionary<string, UiCfgItem>();
 			_dataList = new System.Collections.Generic.List<UiCfgItem>();
 			
 			for(int n = _buf.ReadSize() ; n > 0 ; --n)
@@ -31,12 +31,12 @@ namespace Game.Data
 			}
 		}
 
-		public System.Collections.Generic.Dictionary<int, UiCfgItem> DataMap => _dataMap;
+		public System.Collections.Generic.Dictionary<string, UiCfgItem> DataMap => _dataMap;
 		public System.Collections.Generic.List<UiCfgItem> DataList => _dataList;
 
-		public UiCfgItem GetOrDefault(int key) => _dataMap.TryGetValue(key, out var v) ? v : null;
-		public UiCfgItem Get(int key) => _dataMap[key];
-		public UiCfgItem this[int key] => _dataMap[key];
+		public UiCfgItem GetOrDefault(string key) => _dataMap.TryGetValue(key, out var v) ? v : null;
+		public UiCfgItem Get(string key) => _dataMap[key];
+		public UiCfgItem this[string key] => _dataMap[key];
 
 		public void ResolveRef(GameConfigs tables)
 		{

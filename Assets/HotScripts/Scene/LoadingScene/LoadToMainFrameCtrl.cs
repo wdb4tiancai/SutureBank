@@ -33,8 +33,8 @@ namespace Game.Scene
             MainFrameCtrl mainFrameCtrl = new MainFrameCtrl(mainScene);
             SceneMgr.Instance.ChangeCtrl(mainFrameCtrl);
             await ResMgr.Instance.LoadSceneAsync("MainScene");
-            await UiMgr.Instance.OpenUiAsync(UICfg.MainUi);
-            UiMgr.Instance.CloseUi(UICfg.LoadingUi);
+            await UiMgr.Instance.OpenUiAsync(UiCfg.MainUi);
+            UiMgr.Instance.CloseUi(UiCfg.LoadingUi);
         }
     }
 }
