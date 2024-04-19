@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
 using YooAsset;
+using SharePublic;
 
 /// <summary>
 /// 更新资源清单
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 public class FsmUpdatePackageManifest : IStateNode
 {
     //状态机
@@ -35,9 +37,8 @@ public class FsmUpdatePackageManifest : IStateNode
     {
         yield return new WaitForSecondsRealtime(0.5f);
 
-        var packageName = (string)m_Machine.GetBlackboardValue("PackageName");
         var packageVersion = (string)m_Machine.GetBlackboardValue("PackageVersion");
-        var package = YooAssets.GetPackage(packageName);
+        var package = YooAssets.GetPackage(AssetsVersion.AssetPackageName);
         bool savePackageVersion = true;
         var operation = package.UpdatePackageManifestAsync(packageVersion, savePackageVersion);
         yield return operation;
@@ -50,7 +51,7 @@ public class FsmUpdatePackageManifest : IStateNode
         }
         else
         {
-            m_Machine.ChangeState<FsmCreatePackageDownloader>();
+            m_Machine.ChangeState<FsmClearPackageCache>();
         }
     }
 }

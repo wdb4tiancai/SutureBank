@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
 using YooAsset;
+using SharePublic;
 
 /// <summary>
 /// 流程更新完毕
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 internal class FsmUpdaterDone : IStateNode
 {
     private StateMachine m_Machine;
@@ -21,8 +23,7 @@ internal class FsmUpdaterDone : IStateNode
         Debug.Log("流程更新完毕");
 #endif
         // 设置默认的资源包
-        var packageName = (string)m_Machine.GetBlackboardValue("PackageName");
-        var gamePackage = YooAssets.GetPackage(packageName);
+        var gamePackage = YooAssets.GetPackage(AssetsVersion.AssetPackageName);
         YooAssets.SetDefaultPackage(gamePackage);
         m_Machine.ChangeState<FsmLoadHotUpdateDll>();
     }

@@ -6,6 +6,7 @@ using UniFramework.Machine;
 /// <summary>
 /// 下载完毕
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 internal class FsmDownloadPackageOver : IStateNode
 {
     private StateMachine m_Machine;

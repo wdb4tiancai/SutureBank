@@ -1,38 +1,51 @@
 ﻿using Cysharp.Threading.Tasks;
 using Game.UI;
 using Game.Config;
-using UnityEngine;
 using Game.Audio;
 using Game.Res;
 using Game.Scene;
+using Game.Util;
 
 namespace Game
 {
-    public class EngineMgr
+    public class EngineMgr : SingletonMgrBase<EngineMgr>
     {
         public bool m_IsInit = false;
-        public static Engine Engine;//启动器管理对象
 
-        public async UniTask Init(Engine engine)
+        public override async UniTask Init()
         {
-            Engine = engine;
-            SceneMgr.Instance.Init(engine);
-            ResMgr.Instance.Init(engine);
-            await ConfigMgr.Instance.Init(engine);
-            AudioMgr.Instance.Init(engine);
-            await UiMgr.Instance.Init(engine);
+            await SceneMgr.Instance.Init();
+            await ResMgr.Instance.Init();
+            await ConfigMgr.Instance.Init();
+            await AudioMgr.Instance.Init();
+            await UiMgr.Instance.Init();
             m_IsInit = true;
-            SceneMgr.Instance.ChangeToLoginScene();
+            await SceneMgr.Instance.ChangeToLoginScene();
         }
-        public void Destroy()
+        public override async UniTask Destroy()
         {
-            SceneMgr.Instance.Destroy();
-            ConfigMgr.Instance.Destroy();
-            UiMgr.Instance.Destroy();
-            AudioMgr.Instance.Destroy();
-            ResMgr.Instance.Destroy();
+            await SceneMgr.Instance.Destroy();
+            await ConfigMgr.Instance.Destroy();
+            await UiMgr.Instance.Destroy();
+            await AudioMgr.Instance.Destroy();
+            await ResMgr.Instance.Destroy();
         }
-        public void Update(float dt)
+
+
+        public override async UniTask Reset()
+        {
+            if (!m_IsInit)
+            {
+                return;
+            }
+            await SceneMgr.Instance.Reset();
+            await ConfigMgr.Instance.Reset();
+            await UiMgr.Instance.Reset();
+            await AudioMgr.Instance.Reset();
+            await ResMgr.Instance.Reset();
+        }
+
+        public override void Update(float dt)
         {
             if (!m_IsInit)
             {
@@ -49,5 +62,6 @@ namespace Game
                 return;
             }
         }
+
     }
 }

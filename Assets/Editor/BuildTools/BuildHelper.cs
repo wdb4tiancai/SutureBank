@@ -7,9 +7,12 @@ using System.IO;
 using System.Collections.Generic;
 using LitJson;
 using System.Linq;
+using YooAsset.Editor;
+using SharePublic;
 
 public class BuildHelper
 {
+
     /// <summary>
     /// 工程目录路径，Assets上一层
     /// </summary>
@@ -42,21 +45,16 @@ public class BuildHelper
     /// </summary>
     public const string HotGameDllCfgFileName = "HotUpdateDllCfg.json";
 
-    //public static string PackageExportPath = string.Format("{0}/BuildPacakage/", ProjectPath);
+    private static string ANDROID_PROJECT_NAME = ProjectPath + "/Apk";
 
-    //public static string HotUpdateAssetsPath = string.Format("{0}/HotUpdateAssets/", Application.dataPath);
-
-    //public static string HotUpdateDllPath = string.Format("{0}HotUpdateDll/", HotUpdateAssetsPath);
-
-    [MenuItem("工具/打包工具/打整包")]
+    [MenuItem("工具/打包工具/打Android整包")]
     public static void Test()
     {
-        IReadOnlyList<string> assemblies = AOTGenericReferences.PatchedAOTAssemblyList;
-        for (int i = 0; i < assemblies.Count; i++)
-        {
-            Debug.LogError(assemblies[i]);
-        }
-        Debug.LogError(assemblies.ToArray());
+        GenerateAOTDllListFile();
+        GenerateHotDllListFile();
+        BuildInternal();
+
+        BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, ANDROID_PROJECT_NAME + "/test.apk", BuildTarget.Android, BuildOptions.None);
     }
 
     [MenuItem("工具/打包工具/生成AOTDll并复制进文件夹")]
@@ -176,6 +174,46 @@ public class BuildHelper
 
         return true;
     }
+
+    [MenuItem("工具/打包工具/生成热更资源")]
+
+    private static void BuildInternal()
+    {
+        BuildTarget buildTarget = BuildTarget.Android;
+        Debug.Log($"开始构建 : {buildTarget}");
+
+        var buildoutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
+        var streamingAssetsRoot = AssetBundleBuilderHelper.GetStreamingAssetsRoot();
+
+        // 构建参数
+        BuiltinBuildParameters buildParameters = new BuiltinBuildParameters();
+        buildParameters.BuildOutputRoot = buildoutputRoot;
+        buildParameters.BuildinFileRoot = streamingAssetsRoot;
+        buildParameters.BuildPipeline = EBuildPipeline.BuiltinBuildPipeline.ToString();
+        buildParameters.BuildTarget = buildTarget;
+        buildParameters.BuildMode = EBuildMode.ForceRebuild;
+        buildParameters.PackageName = AssetsVersion.AssetPackageName;
+        buildParameters.PackageVersion = "1.0.0";
+        buildParameters.VerifyBuildingResult = true;
+        buildParameters.FileNameStyle = EFileNameStyle.HashName;
+        buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.ClearAndCopyByTags;
+        buildParameters.BuildinFileCopyParams = string.Empty;
+        buildParameters.EncryptionServices = null;
+        buildParameters.CompressOption = ECompressOption.LZ4;
+
+        // 执行构建
+        BuiltinBuildPipeline pipeline = new BuiltinBuildPipeline();
+        var buildResult = pipeline.Run(buildParameters, true);
+        if (buildResult.Success)
+        {
+            Debug.Log($"构建成功 : {buildResult.OutputPackageDirectory}");
+        }
+        else
+        {
+            Debug.LogError($"构建失败 : {buildResult.ErrorInfo}");
+        }
+    }
+
 
 
     // 获取各个平台的目录

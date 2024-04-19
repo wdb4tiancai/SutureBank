@@ -26,7 +26,7 @@ namespace Game.UI
 
 
         //设置ui上使用的图片
-        public async UniTaskVoid SetImageSprite(Image image, string resPath)
+        public async UniTask SetImageSprite(Image image, string resPath)
         {
             if (image == null || resPath.Equals(string.Empty))
             {
@@ -50,7 +50,7 @@ namespace Game.UI
             }
         }
         //加载预制
-        public async UniTaskVoid LoadPrefab(string prefabPath, Transform prefabParent = null)
+        public async UniTask LoadPrefab(string prefabPath, Transform prefabParent = null)
         {
             if (prefabPath.Equals(string.Empty))
             {

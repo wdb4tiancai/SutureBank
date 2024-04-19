@@ -8,26 +8,37 @@ using UnityEngine.SceneManagement;
 
 namespace Game.Scene
 {
-    public class SceneMgr : SingletonBase<SceneMgr>
+    public class SceneMgr : SingletonMgrBase<SceneMgr>
     {
-        private Engine m_Engine;
         private bool m_IsInit = false;
         private BaseScene m_CurScene;
         private FrameCtrl m_CurFrameCtrl;
 
-        public void Init(Engine engine)
+        public override async UniTask Init()
         {
-            m_Engine = engine;
             m_IsInit = true;
+            await UniTask.CompletedTask;
         }
-        public void Destroy()
+        public override async UniTask Destroy()
         {
             if (!m_IsInit)
             {
                 return;
             }
+            await UniTask.CompletedTask;
         }
-        public void Update(float dt)
+
+        public override async UniTask Reset()
+        {
+            if (!m_IsInit)
+            {
+                return;
+            }
+            await UniTask.CompletedTask;
+        }
+
+
+        public override void Update(float dt)
         {
             if (!m_IsInit)
             {
@@ -38,7 +49,7 @@ namespace Game.Scene
 
 
         //切换到登录场景
-        public async void ChangeToLoginScene()
+        public async UniTask ChangeToLoginScene()
         {
             //设置目标帧率
             SetTargetFrame(60);
@@ -53,7 +64,7 @@ namespace Game.Scene
         }
 
         //切换到主场景
-        public async void ChangeToMainScene()
+        public async UniTask ChangeToMainScene()
         {
             //设置目标帧率
             SetTargetFrame(60);
@@ -101,6 +112,8 @@ namespace Game.Scene
             Application.targetFrameRate = targetFrame;
             FrameDtTime = 1.0f / targetFrame;
         }
+
+
         public float FrameDtTime
         {
             get; private set;

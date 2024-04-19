@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
 using YooAsset;
+using SharePublic;
 
 /// <summary>
 /// 更新资源版本号
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 internal class FsmUpdatePackageVersion : IStateNode
 {
     //状态机
@@ -36,8 +38,7 @@ internal class FsmUpdatePackageVersion : IStateNode
     {
         yield return new WaitForSecondsRealtime(0.5f);
 
-        var packageName = (string)m_Machine.GetBlackboardValue("PackageName");
-        var package = YooAssets.GetPackage(packageName);
+        var package = YooAssets.GetPackage(AssetsVersion.AssetPackageName);
         var operation = package.UpdatePackageVersionAsync();
         yield return operation;
 

@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
 using YooAsset;
+using SharePublic;
 
 /// <summary>
 /// 创建文件下载器
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 public class FsmCreatePackageDownloader : IStateNode
 {
     private StateMachine m_Machine;
@@ -34,8 +36,7 @@ public class FsmCreatePackageDownloader : IStateNode
     {
         yield return new WaitForSecondsRealtime(0.5f);
 
-        var packageName = (string)m_Machine.GetBlackboardValue("PackageName");
-        var package = YooAssets.GetPackage(packageName);
+        var package = YooAssets.GetPackage(AssetsVersion.AssetPackageName);
         int downloadingMaxNum = 10;
         int failedTryAgain = 3;
         var downloader = package.CreateResourceDownloader(downloadingMaxNum, failedTryAgain);

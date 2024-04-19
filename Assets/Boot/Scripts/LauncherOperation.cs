@@ -22,7 +22,7 @@ public class LauncherOperation : GameAsyncOperation
     //启动器步骤
     private LauncherSteps m_Steps = LauncherSteps.None;
 
-    public LauncherOperation(string launcherUiPath, string packageName, string buildPipeline, EPlayMode playMode)
+    public LauncherOperation()
     {
         // 注册监听事件
         m_EventGroup.AddListener<LauncherEventDefine.UserTryInitialize>(OnHandleEventMessage);
@@ -33,33 +33,26 @@ public class LauncherOperation : GameAsyncOperation
 
         // 创建状态机
         m_Machine = new StateMachine(this);
-        m_Machine.AddNode<FsmOpenLauncherUI>();
-        m_Machine.AddNode<FsmInitializePackage>();
-        m_Machine.AddNode<FsmUpdatePackageVersion>();
-        m_Machine.AddNode<FsmUpdatePackageManifest>();
-        m_Machine.AddNode<FsmCreatePackageDownloader>();
-        m_Machine.AddNode<FsmDownloadPackageFiles>();
-        m_Machine.AddNode<FsmDownloadPackageOver>();
-        m_Machine.AddNode<FsmClearPackageCache>();
-        m_Machine.AddNode<FsmUpdaterDone>();
-        m_Machine.AddNode<FsmLoadHotUpdateDll>();
-        m_Machine.AddNode<FsmLauncherGame>();
-
-        //启动器ui路径
-        m_Machine.SetBlackboardValue("LauncherUiPath", launcherUiPath);
-        //热更资源的PackageName
-        m_Machine.SetBlackboardValue("PackageName", packageName);
-        //资源的模式
-        m_Machine.SetBlackboardValue("PlayMode", playMode);
-        //构建管线类型
-        m_Machine.SetBlackboardValue("BuildPipeline", buildPipeline);
+        m_Machine.AddNode<FsmOpenLauncherUI>();//打开启动界面
+        m_Machine.AddNode<FsmInitializePackage>();//初始化热更资源系统
+        m_Machine.AddNode<FsmUpdatePackageVersion>();// 更新资源版本号
+        m_Machine.AddNode<FsmUpdatePackageManifest>();// 更新资源清单
+        m_Machine.AddNode<FsmCreatePackageDownloader>();// 创建文件下载器
+        m_Machine.AddNode<FsmDownloadPackageFiles>();// 下载更新文件
+        m_Machine.AddNode<FsmDownloadPackageOver>();// 下载完毕
+        m_Machine.AddNode<FsmClearPackageCache>();// 清理未使用的缓存文件
+        m_Machine.AddNode<FsmUpdaterDone>();// 流程更新完毕
+        m_Machine.AddNode<FsmLoadHotUpdateDll>();// 加载热更代码
+        m_Machine.AddNode<FsmLauncherGame>();// 启动游戏
 
     }
+
     protected override void OnStart()
     {
         m_Steps = LauncherSteps.Update;
         m_Machine.Run<FsmOpenLauncherUI>();
     }
+
     protected override void OnUpdate()
     {
         if (m_Steps == LauncherSteps.None || m_Steps == LauncherSteps.Done)

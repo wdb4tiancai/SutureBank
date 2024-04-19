@@ -10,6 +10,7 @@ using UniFramework.Machine;
 /// <summary>
 /// 加载热更代码
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 internal class FsmLoadHotUpdateDll : IStateNode
 {
     private StateMachine m_Machine;

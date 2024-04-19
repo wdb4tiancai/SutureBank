@@ -9,27 +9,50 @@ using UnityEngine.SceneManagement;
 using YooAsset;
 namespace Game.Res
 {
-    public class ResMgr : SingletonBase<ResMgr>
+    public class ResMgr : SingletonMgrBase<ResMgr>
     {
-        private Engine m_Engine;
+        private bool m_IsInit = false;
         /// <summary>
         /// 初始化
         /// </summary>
         /// <param name="global"></param>
-        public void Init(Engine engine)
+        public override async UniTask Init()
         {
-            m_Engine = engine;
+            m_IsInit = true;
+            await UniTask.CompletedTask;
         }
 
         /// <summary>
         /// 销毁
         /// </summary>
-        public virtual void Destroy()
+        public override async UniTask Destroy()
         {
+            if (!m_IsInit)
+            {
+                return;
+            }
             ResourcePackage package = YooAssets.GetPackage(AssetsVersion.AssetPackageName);
             package?.UnloadUnusedAssets();
-            Resources.UnloadUnusedAssets();
+            await Resources.UnloadUnusedAssets();
             System.GC.Collect();
+            await UniTask.CompletedTask;
+        }
+
+        public override async UniTask Reset()
+        {
+            if (!m_IsInit)
+            {
+                return;
+            }
+            await UniTask.CompletedTask;
+        }
+
+        public override void Update(float dt)
+        {
+            if (!m_IsInit)
+            {
+                return;
+            }
         }
 
         //卸载资源

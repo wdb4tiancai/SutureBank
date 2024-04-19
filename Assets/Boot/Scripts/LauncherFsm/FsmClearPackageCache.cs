@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
 using YooAsset;
+using SharePublic;
 
 /// <summary>
 /// 清理未使用的缓存文件
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 internal class FsmClearPackageCache : IStateNode
 {
     private StateMachine m_Machine;
@@ -21,8 +23,7 @@ internal class FsmClearPackageCache : IStateNode
         Debug.Log("清理未使用的缓存文件");
 #endif
         LauncherEventDefine.LauncherStatesChange.SendEventMessage("清理未使用的缓存文件！");
-        var packageName = (string)m_Machine.GetBlackboardValue("PackageName");
-        var package = YooAssets.GetPackage(packageName);
+        var package = YooAssets.GetPackage(AssetsVersion.AssetPackageName);
         var operation = package.ClearUnusedCacheFilesAsync();
         operation.Completed += Operation_Completed;
     }

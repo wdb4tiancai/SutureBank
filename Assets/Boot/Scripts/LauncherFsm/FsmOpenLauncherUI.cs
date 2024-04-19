@@ -1,12 +1,14 @@
+锘縰sing SharePublic;
 using UniFramework.Machine;
 using UnityEngine;
 
 /// <summary>
-/// 打开启动界面
+/// 鎵撳紑鍚姩鐣岄潰
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 public class FsmOpenLauncherUI : IStateNode
 {
-    //状态机
+    //鐘舵�佹満
     private StateMachine m_Machine;
     void IStateNode.OnCreate(StateMachine machine)
     {
@@ -15,11 +17,10 @@ public class FsmOpenLauncherUI : IStateNode
     void IStateNode.OnEnter()
     {
 #if UNITY_EDITOR
-        Debug.Log("打开启动界面");
+        Debug.Log("鎵撳紑鍚姩鐣岄潰");
 #endif
-        // 加载更新页面
-        string launcherUiPath = (string)m_Machine.GetBlackboardValue("LauncherUiPath");
-        var launcherUiObj = Resources.Load<GameObject>(launcherUiPath);
+        // 鍔犺浇鏇存柊椤甸潰        
+        GameObject launcherUiObj = Resources.Load<GameObject>(AssetsVersion.LauncherUiPath);
         GameObject.Instantiate(launcherUiObj);
         m_Machine.Run<FsmInitializePackage>();
     }

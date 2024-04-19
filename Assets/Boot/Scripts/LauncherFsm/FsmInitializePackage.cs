@@ -5,10 +5,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UniFramework.Machine;
 using YooAsset;
+using SharePublic;
 
 /// <summary>
 /// 初始化资源包
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 internal class FsmInitializePackage : IStateNode
 {
     private StateMachine m_Machine;
@@ -34,55 +36,40 @@ internal class FsmInitializePackage : IStateNode
 
     private IEnumerator InitPackage()
     {
-        var playMode = (EPlayMode)m_Machine.GetBlackboardValue("PlayMode");
-        var packageName = (string)m_Machine.GetBlackboardValue("PackageName");
-        var buildPipeline = (string)m_Machine.GetBlackboardValue("BuildPipeline");
 
         // 创建资源包裹类
-        var package = YooAssets.TryGetPackage(packageName);
+        var package = YooAssets.TryGetPackage(AssetsVersion.AssetPackageName);
         if (package == null)
-            package = YooAssets.CreatePackage(packageName);
+            package = YooAssets.CreatePackage(AssetsVersion.AssetPackageName);
 
         // 编辑器下的模拟模式
         InitializationOperation initializationOperation = null;
-        if (playMode == EPlayMode.EditorSimulateMode)
-        {
-            var createParameters = new EditorSimulateModeParameters();
-            createParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(buildPipeline, packageName);
-            initializationOperation = package.InitializeAsync(createParameters);
-        }
 
-        // 单机运行模式
-        if (playMode == EPlayMode.OfflinePlayMode)
-        {
-            var createParameters = new OfflinePlayModeParameters();
-            createParameters.DecryptionServices = null;
-            initializationOperation = package.InitializeAsync(createParameters);
-        }
+#if GAME_PLATFORM_EDITOR
+        var createParameters = new EditorSimulateModeParameters();
+        createParameters.SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild(AssetsVersion.BuildPipeline, AssetsVersion.AssetPackageName);
+        initializationOperation = package.InitializeAsync(createParameters);
+#elif GAME_PLATFORM_ANDROID || GAME_PLATFORM_IOS
 
-        // 联机运行模式
-        if (playMode == EPlayMode.HostPlayMode)
-        {
-            string defaultHostServer = GetHostServerURL();
-            string fallbackHostServer = GetHostServerURL();
-            var createParameters = new HostPlayModeParameters();
-            createParameters.DecryptionServices = null;
-            createParameters.BuildinQueryServices = new GameQueryServices();
-            createParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
-            initializationOperation = package.InitializeAsync(createParameters);
-        }
+        string defaultHostServer = GetHostServerURL();
+        string fallbackHostServer = GetHostServerURL();
+        var createParameters = new HostPlayModeParameters();
+        createParameters.DecryptionServices = null;
+        createParameters.BuildinQueryServices = new GameQueryServices();
+        createParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
 
-        // WebGL运行模式
-        if (playMode == EPlayMode.WebPlayMode)
-        {
-            string defaultHostServer = GetHostServerURL();
-            string fallbackHostServer = GetHostServerURL();
-            var createParameters = new WebPlayModeParameters();
-            createParameters.DecryptionServices = null;
-            createParameters.BuildinQueryServices = new GameQueryServices();
-            createParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
-            initializationOperation = package.InitializeAsync(createParameters);
-        }
+        initializationOperation = package.InitializeAsync(createParameters);
+
+#elif GAME_PLATFORM_WEIXIN
+        string defaultHostServer = GetHostServerURL();
+        string fallbackHostServer = GetHostServerURL();
+        var createParameters = new WebPlayModeParameters();
+        createParameters.DecryptionServices = null;
+        createParameters.BuildinQueryServices = new GameQueryServices();
+        createParameters.RemoteServices = new RemoteServices(defaultHostServer, fallbackHostServer);
+        initializationOperation = package.InitializeAsync(createParameters);
+#endif
+
 
         yield return initializationOperation;
 
@@ -105,29 +92,10 @@ internal class FsmInitializePackage : IStateNode
     /// </summary>
     private string GetHostServerURL()
     {
-        //string hostServerIP = "http://10.0.2.2"; //安卓模拟器地址
-        string hostServerIP = "http://127.0.0.1";
-        string appVersion = "v1.0";
+        string hostServerIP = "http://10.61.84.115:7595";
+        string appVersion = "1.0.0";
 
-#if UNITY_EDITOR
-        if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.Android)
-            return $"{hostServerIP}/CDN/Android/{appVersion}";
-        else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.iOS)
-            return $"{hostServerIP}/CDN/IPhone/{appVersion}";
-        else if (UnityEditor.EditorUserBuildSettings.activeBuildTarget == UnityEditor.BuildTarget.WebGL)
-            return $"{hostServerIP}/CDN/WebGL/{appVersion}";
-        else
-            return $"{hostServerIP}/CDN/PC/{appVersion}";
-#else
-		if (Application.platform == RuntimePlatform.Android)
-			return $"{hostServerIP}/CDN/Android/{appVersion}";
-		else if (Application.platform == RuntimePlatform.IPhonePlayer)
-			return $"{hostServerIP}/CDN/IPhone/{appVersion}";
-		else if (Application.platform == RuntimePlatform.WebGLPlayer)
-			return $"{hostServerIP}/CDN/WebGL/{appVersion}";
-		else
-			return $"{hostServerIP}/CDN/PC/{appVersion}";
-#endif
+        return $"{hostServerIP}/{appVersion}";
     }
 
     /// <summary>

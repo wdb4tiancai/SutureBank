@@ -9,9 +9,9 @@ using YooAsset;
 
 namespace Game.Audio
 {
-    public class AudioMgr : SingletonBase<AudioMgr>
+    public class AudioMgr : SingletonMgrBase<AudioMgr>
     {
-        private Engine m_Engine;
+        private bool m_IsInit = false;
         //音效管理器的obj对象
         private GameObject m_AudioObject;
 
@@ -22,25 +22,46 @@ namespace Game.Audio
         /// 初始化
         /// </summary>
         /// <param name="global"></param>
-        public void Init(Engine engine)
+        public override async UniTask Init()
         {
-            m_Engine = engine;
-            m_AudioObject = engine.transform.Find("AudioMgr")?.gameObject;
+            m_AudioObject = Engine.Instance.transform.Find("AudioMgr")?.gameObject;
             if (m_AudioObject == null)
             {
                 m_AudioObject = new GameObject("AudioMgr");
-                m_AudioObject.transform.SetParent(engine.transform, false);
+                m_AudioObject.transform.SetParent(Engine.Instance.transform, false);
             }
+            m_IsInit = true;
+            await UniTask.CompletedTask;
         }
 
         /// <summary>
         /// 销毁
         /// </summary>
-        public virtual void Destroy()
+        public override async UniTask Destroy()
         {
-
+            if (!m_IsInit)
+            {
+                return;
+            }
+            await UniTask.CompletedTask;
         }
 
+        public override async UniTask Reset()
+        {
+            if (!m_IsInit)
+            {
+                return;
+            }
+            await UniTask.CompletedTask;
+        }
+
+        public override void Update(float dt)
+        {
+            if (!m_IsInit)
+            {
+                return;
+            }
+        }
 
         /// <summary>
         /// 停止所有的声音

@@ -6,6 +6,7 @@ using YooAsset;
 /// <summary>
 /// 下载更新文件
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 public class FsmDownloadPackageFiles : IStateNode
 {
     //状态机

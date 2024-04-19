@@ -7,6 +7,7 @@ using YooAsset;
 /// <summary>
 /// 启动游戏
 /// </summary>
+[UnityEngine.Scripting.Preserve]
 internal class FsmLauncherGame : IStateNode
 {
     private StateMachine m_Machine;

@@ -1,26 +1,35 @@
-﻿using System;
+﻿using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 namespace Game
 {
     public class Engine : MonoBehaviour
     {
-        public static EngineMgr EngineMgr = new EngineMgr();
+
+        public static Engine Instance { get; private set; }
+
         private void Awake()
         {
+            Instance = this;
             DateTime now = DateTime.Now;
             UnityEngine.Random.InitState(now.Second);
             DontDestroyOnLoad(gameObject);
-            _ = EngineMgr.Init(this);
         }
+
+        private void Start()
+        {
+            EngineMgr.Instance.Init();
+        }
+
         private void Update()
         {
             float dtTime = Time.deltaTime;
-            EngineMgr.Update(dtTime);
+            EngineMgr.Instance.Update(dtTime);
         }
 
         private void OnDestroy()
         {
-            EngineMgr.Destroy();
+            EngineMgr.Instance.Destroy();
 #if (UNITY_EDITOR)
             Resources.UnloadUnusedAssets();
             System.GC.Collect();
@@ -39,7 +48,7 @@ namespace Game
 
         private void OnApplicationFocus(bool focus)
         {
-            EngineMgr.ApplicationFocus(focus);
+            EngineMgr.Instance.ApplicationFocus(focus);
         }
     }
 

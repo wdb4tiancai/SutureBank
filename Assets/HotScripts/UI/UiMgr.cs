@@ -3,8 +3,6 @@ using Cysharp.Threading.Tasks;
 using UIFramework;
 using YooAsset;
 using UnityEngine;
-using System;
-using System.Collections.Generic;
 using Game.Config;
 using Game.Data;
 
@@ -12,14 +10,13 @@ namespace Game.UI
 {
 
 
-    public class UiMgr : SingletonBase<UiMgr>
+    public class UiMgr : SingletonMgrBase<UiMgr>
     {
         private GameObject m_UIFrameObj;
         private UIFrame m_UIFrame;
         private AssetHandle m_UIFrameHandle;
-        private Engine m_Engine;
         private bool m_IsInit = false;
-        public async UniTask Init(Engine engine)
+        public override async UniTask Init()
         {
             System.Collections.Generic.List<UiCfgItem> uiCfgItems = ConfigMgr.Instance.GameConfigs.UiCfg.DataList;
             for (int i = 0; i < uiCfgItems.Count; i++)
@@ -27,13 +24,12 @@ namespace Game.UI
                 UiCfgItem uiCfgItem = uiCfgItems[i];
                 UiCfg.AddUIInfo(uiCfgItem.LayerId, uiCfgItem.Id, uiCfgItem.ResPath);
             }
-            m_Engine = engine;
             if (m_UIFrame == null)
             {
                 AssetHandle m_UIFrameHandle = YooAssets.LoadAssetAsync<GameObject>("Base_UIFrame");
                 await m_UIFrameHandle.Task;
                 m_UIFrameObj = m_UIFrameHandle.InstantiateSync();
-                m_UIFrameObj.transform.SetParent(engine.transform);
+                m_UIFrameObj.transform.SetParent(Engine.Instance.transform);
                 m_UIFrameObj.transform.SetAsLastSibling();
                 m_UIFrameObj.transform.localPosition = Vector3.zero;
                 m_UIFrameObj.transform.localScale = Vector3.one;
@@ -43,7 +39,7 @@ namespace Game.UI
             }
             m_IsInit = true;
         }
-        public void Destroy()
+        public override async UniTask Destroy()
         {
             if (!m_IsInit)
             {
@@ -51,8 +47,17 @@ namespace Game.UI
             }
             m_UIFrameHandle?.Release();
             m_UIFrameHandle = null;
+            await UniTask.CompletedTask;
         }
-        public void Update(float dt)
+        public override async UniTask Reset()
+        {
+            if (!m_IsInit)
+            {
+                return;
+            }
+            await UniTask.CompletedTask;
+        }
+        public override void Update(float dt)
         {
             if (!m_IsInit)
             {

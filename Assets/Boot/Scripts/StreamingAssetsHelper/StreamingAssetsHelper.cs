@@ -2,6 +2,7 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 using YooAsset;
+using SharePublic;
 
 /// <summary>
 /// 资源文件查询服务类
@@ -26,7 +27,7 @@ public sealed class StreamingAssetsHelper
     public static void Init() { }
     public static bool FileExists(string packageName, string fileName, string fileCRC)
     {
-        string filePath = Path.Combine(Application.streamingAssetsPath, StreamingAssetsDefine.RootFolderName, packageName, fileName);
+        string filePath = Path.Combine(Application.streamingAssetsPath, AssetsVersion.RootFolderName, packageName, fileName);
         if (File.Exists(filePath))
         {
             if (GameQueryServices.CompareFileCRC)
@@ -127,7 +128,7 @@ internal class PreprocessBuild : UnityEditor.Build.IPreprocessBuildWithReport
             UnityEditor.AssetDatabase.Refresh();
         }
 
-        string folderPath = $"{Application.dataPath}/StreamingAssets/{StreamingAssetsDefine.RootFolderName}";
+        string folderPath = $"{Application.dataPath}/StreamingAssets/{AssetsVersion.RootFolderName}";
         DirectoryInfo root = new DirectoryInfo(folderPath);
         if (root.Exists == false)
         {

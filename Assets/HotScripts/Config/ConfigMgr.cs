@@ -9,25 +9,38 @@ using Luban;
 
 namespace Game.Config
 {
-    public class ConfigMgr : SingletonBase<ConfigMgr>
+    public class ConfigMgr : SingletonMgrBase<ConfigMgr>
     {
         private bool m_IsInit = false;
-        private Engine m_Engine;
         public Game.Data.GameConfigs GameConfigs { get; private set; }
-        public async UniTask Init(Engine engine)
+
+        public override async UniTask Init()
         {
-            m_Engine = engine;
+            m_IsInit = false;
             GameConfigs = new Game.Data.GameConfigs();
             await GameConfigs.LoadRes(LoadByteBuf);
+            m_IsInit = true;
         }
-        public void Destroy()
+
+        public override async UniTask Destroy()
         {
             if (!m_IsInit)
             {
                 return;
             }
+            await UniTask.CompletedTask;
         }
-        public void Update(float dt)
+
+        public override async UniTask Reset()
+        {
+            if (!m_IsInit)
+            {
+                return;
+            }
+            await UniTask.CompletedTask;
+        }
+
+        public override void Update(float dt)
         {
             if (!m_IsInit)
             {
