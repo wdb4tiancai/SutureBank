@@ -30,6 +30,7 @@ public class LauncherOperation : GameAsyncOperation
         m_EventGroup.AddListener<LauncherEventDefine.UserTryUpdatePackageVersion>(OnHandleEventMessage);
         m_EventGroup.AddListener<LauncherEventDefine.UserTryUpdatePatchManifest>(OnHandleEventMessage);
         m_EventGroup.AddListener<LauncherEventDefine.UserTryDownloadWebFiles>(OnHandleEventMessage);
+        m_EventGroup.AddListener<LauncherEventDefine.ChangeToLoginScene>(OnHandleEventMessage);
 
         // 创建状态机
         m_Machine = new StateMachine(this);
@@ -92,6 +93,11 @@ public class LauncherOperation : GameAsyncOperation
         else if (message is LauncherEventDefine.UserTryDownloadWebFiles)
         {
             m_Machine.ChangeState<FsmCreatePackageDownloader>();
+        }
+        else if (message is LauncherEventDefine.ChangeToLoginScene)
+        {
+            m_EventGroup.RemoveAllListener();
+            YooAssets.LoadSceneAsync("EngineScene");
         }
         else
         {

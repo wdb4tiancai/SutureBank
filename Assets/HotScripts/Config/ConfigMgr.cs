@@ -1,60 +1,97 @@
 ﻿using Game.Util;
-using Cysharp.Threading.Tasks;
-using UIFramework;
 using YooAsset;
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using Luban;
+using Game.Res;
+using Game.Data;
 
-namespace Game.Config
+namespace Game.Main
 {
     public class ConfigMgr : SingletonMgrBase<ConfigMgr>
     {
-        private bool m_IsInit = false;
+        public bool IsInit { get; private set; } = false;
+
         public Game.Data.GameConfigs GameConfigs { get; private set; }
 
-        public override async UniTask Init()
+        private List<ConfigBase> m_WaitLoadCfgs = new List<ConfigBase>();//等待下载的配置表
+        private List<ConfigBase> m_FailLoadCfgs = new List<ConfigBase>(100);//下载失败的配置表
+
+        public override void Init()
         {
-            m_IsInit = false;
+            if (IsInit)
+            {
+                return;
+            }
+            IsInit = true;
             GameConfigs = new Game.Data.GameConfigs();
-            await GameConfigs.LoadRes(LoadByteBuf);
-            m_IsInit = true;
+            m_WaitLoadCfgs = GameConfigs.LoadRes();
+            StartLoadCfgs();
         }
 
-        public override async UniTask Destroy()
+        public override void Destroy()
         {
-            if (!m_IsInit)
+            if (!IsInit)
             {
                 return;
             }
-            await UniTask.CompletedTask;
         }
 
-        public override async UniTask Reset()
+        public override void Reset()
         {
-            if (!m_IsInit)
+            if (!IsInit)
             {
                 return;
             }
-            await UniTask.CompletedTask;
         }
 
         public override void Update(float dt)
         {
-            if (!m_IsInit)
+            if (!IsInit)
             {
                 return;
             }
         }
 
-        private static async UniTask<ByteBuf> LoadByteBuf(string file)
+
+        //开始下载配置表
+        private void StartLoadCfgs()
         {
-            AssetHandle byteBufData = YooAssets.LoadAssetAsync<TextAsset>(file);
-            await byteBufData.Task;
-            return new ByteBuf(((TextAsset)byteBufData.AssetObject).bytes);
+            List<ConfigBase> tempLoadCfgs = new List<ConfigBase>(m_WaitLoadCfgs.Count);
+            tempLoadCfgs.AddRange(m_WaitLoadCfgs);
+            for (int i = 0; i < tempLoadCfgs.Count; i++)
+            {
+                LoadCfg(tempLoadCfgs[i]);
+            }
         }
 
+
+        //加载配置表
+        private void LoadCfg(ConfigBase config)
+        {
+            ResMgr.Instance.LoadRes(config.ConfigName, (handle) =>
+            {
+                ChangeLoadCfg(config, handle);
+            });
+        }
+
+        //更改下载记录
+        private void ChangeLoadCfg(ConfigBase config, AssetHandle handle)
+        {
+            m_WaitLoadCfgs.Remove(config);
+            if (handle.IsDone && handle.AssetObject != null)
+            {
+                config.LoadByteBuf(new ByteBuf(((TextAsset)handle.AssetObject).bytes));
+            }
+            else
+            {
+                m_FailLoadCfgs.Add(config);
+            }
+            if (m_WaitLoadCfgs.Count <= 0)
+            {
+                EngineFsmDefine.ConfigInitializeSucceed.SendEventMessage();
+            }
+        }
     }
 }
 

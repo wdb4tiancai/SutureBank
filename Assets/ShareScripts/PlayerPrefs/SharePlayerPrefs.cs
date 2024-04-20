@@ -9,6 +9,8 @@ namespace SharePublic
         {
 #if GAME_PLATFORM_EDITOR || GAME_PLATFORM_ANDROID || GAME_PLATFORM_IOS
             PlayerPrefs = new DYPlayerPrefsApp();
+#elif GAME_PLATFORM_WEIXIN
+            PlayerPrefs = new DYPlayerPrefsWX();
 #endif
         }
         public static void SetInt(string key, int value)

@@ -22,9 +22,9 @@ namespace Game.Util
             }
         }
 
-        public abstract UniTask Init();
-        public abstract UniTask Reset();
-        public abstract UniTask Destroy();
+        public abstract void Init();
+        public abstract void Reset();
+        public abstract void Destroy();
 
         public abstract void Update(float dt);
 

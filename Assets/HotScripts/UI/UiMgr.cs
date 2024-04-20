@@ -3,32 +3,36 @@ using Cysharp.Threading.Tasks;
 using UIFramework;
 using YooAsset;
 using UnityEngine;
-using Game.Config;
 using Game.Data;
+using Game.Res;
+using Game.Main;
 
 namespace Game.UI
 {
-
-
     public class UiMgr : SingletonMgrBase<UiMgr>
     {
+        public bool IsInit { get; private set; } = false;
         private GameObject m_UIFrameObj;
         private UIFrame m_UIFrame;
         private AssetHandle m_UIFrameHandle;
-        private bool m_IsInit = false;
-        public override async UniTask Init()
+        public override void Init()
         {
+            if (IsInit)
+            {
+                return;
+            }
+            IsInit = true;
             System.Collections.Generic.List<UiCfgItem> uiCfgItems = ConfigMgr.Instance.GameConfigs.UiCfg.DataList;
             for (int i = 0; i < uiCfgItems.Count; i++)
             {
                 UiCfgItem uiCfgItem = uiCfgItems[i];
                 UiCfg.AddUIInfo(uiCfgItem.LayerId, uiCfgItem.Id, uiCfgItem.ResPath);
             }
-            if (m_UIFrame == null)
+
+            //初始化资源对象
+            ResMgr.Instance.LoadRes("Base_UIFrame", (handle) =>
             {
-                AssetHandle m_UIFrameHandle = YooAssets.LoadAssetAsync<GameObject>("Base_UIFrame");
-                await m_UIFrameHandle.Task;
-                m_UIFrameObj = m_UIFrameHandle.InstantiateSync();
+                m_UIFrameObj = handle.InstantiateSync();
                 m_UIFrameObj.transform.SetParent(Engine.Instance.transform);
                 m_UIFrameObj.transform.SetAsLastSibling();
                 m_UIFrameObj.transform.localPosition = Vector3.zero;
@@ -36,30 +40,29 @@ namespace Game.UI
                 m_UIFrameObj.name = "UIFrame";
                 m_UIFrame = m_UIFrameObj.GetComponent<UIFrame>();
                 m_UIFrame.Initialize();
-            }
-            m_IsInit = true;
+                EngineFsmDefine.UIInitializeSucceed.SendEventMessage();
+            });
+
         }
-        public override async UniTask Destroy()
+        public override void Destroy()
         {
-            if (!m_IsInit)
+            if (!IsInit)
             {
                 return;
             }
             m_UIFrameHandle?.Release();
             m_UIFrameHandle = null;
-            await UniTask.CompletedTask;
         }
-        public override async UniTask Reset()
+        public override void Reset()
         {
-            if (!m_IsInit)
+            if (!IsInit)
             {
                 return;
             }
-            await UniTask.CompletedTask;
         }
         public override void Update(float dt)
         {
-            if (!m_IsInit)
+            if (!IsInit)
             {
                 return;
             }

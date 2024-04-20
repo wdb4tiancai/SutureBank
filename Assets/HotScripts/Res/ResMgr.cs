@@ -16,16 +16,15 @@ namespace Game.Res
         /// 初始化
         /// </summary>
         /// <param name="global"></param>
-        public override async UniTask Init()
+        public override void Init()
         {
             m_IsInit = true;
-            await UniTask.CompletedTask;
         }
 
         /// <summary>
         /// 销毁
         /// </summary>
-        public override async UniTask Destroy()
+        public override void Destroy()
         {
             if (!m_IsInit)
             {
@@ -33,18 +32,16 @@ namespace Game.Res
             }
             ResourcePackage package = YooAssets.GetPackage(AssetsVersion.AssetPackageName);
             package?.UnloadUnusedAssets();
-            await Resources.UnloadUnusedAssets();
+            Resources.UnloadUnusedAssets();
             System.GC.Collect();
-            await UniTask.CompletedTask;
         }
 
-        public override async UniTask Reset()
+        public override void Reset()
         {
             if (!m_IsInit)
             {
                 return;
             }
-            await UniTask.CompletedTask;
         }
 
         public override void Update(float dt)

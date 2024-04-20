@@ -1,5 +1,4 @@
-﻿using Luban;
-using Cysharp.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 {{namespace_with_grace_begin __namespace}}
     public partial class {{__name}}
@@ -13,16 +12,18 @@ using Cysharp.Threading.Tasks;
         public {{table.full_name}} {{format_property_name __code_style table.name}} { get; private set; }
         {{~end~}}
 
-        public async UniTask LoadRes(System.Func<string, UniTask<ByteBuf>> loader)
+        public List<ConfigBase> LoadRes()
         {
-            ByteBuf loadData = null;
+			List<ConfigBase> allConfig = new List<ConfigBase>();
+			
             {{~for table in __tables ~}}
-            loadData = await loader("{{table.output_data_file}}");
-            {{format_property_name __code_style table.name}} = new {{table.full_name}}(loadData);
-            {{~end~}}
-            ResolveRef();
+            {{format_property_name __code_style table.name}} = new {{table.full_name}}("{{table.output_data_file}}");
+			allConfig.Add({{format_property_name __code_style table.name}});
+			
+            {{~end~}}			
+            return allConfig;
         }
-        private void ResolveRef()
+        public void ResolveRef()
         {
             {{~for table in __tables ~}}
             {{format_property_name __code_style table.name}}.ResolveRef(this);

@@ -1,7 +1,7 @@
 ﻿using Cysharp.Threading.Tasks;
 using System;
 using UnityEngine;
-namespace Game
+namespace Game.Main
 {
     public class Engine : MonoBehaviour
     {
@@ -14,11 +14,12 @@ namespace Game
             DateTime now = DateTime.Now;
             UnityEngine.Random.InitState(now.Second);
             DontDestroyOnLoad(gameObject);
+            EngineMgr.Instance.Init();
         }
 
         private void Start()
         {
-            EngineMgr.Instance.Init();
+            EngineMgr.Instance.Start();
         }
 
         private void Update()

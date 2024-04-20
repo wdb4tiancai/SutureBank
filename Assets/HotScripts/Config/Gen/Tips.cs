@@ -12,15 +12,20 @@ using Luban;
 
 namespace Game.Data
 {
-	public partial class Tips
+	public partial class Tips : ConfigBase
 	{
 		private readonly System.Collections.Generic.Dictionary<int, TipsItem> _dataMap;
 		private readonly System.Collections.Generic.List<TipsItem> _dataList;
 		
-		public Tips(ByteBuf _buf)
+		public Tips(string configName)
 		{
 			_dataMap = new System.Collections.Generic.Dictionary<int, TipsItem>();
 			_dataList = new System.Collections.Generic.List<TipsItem>();
+			ConfigName = configName;
+		}
+		
+		public override void LoadByteBuf(ByteBuf _buf)
+		{
 			
 			for(int n = _buf.ReadSize() ; n > 0 ; --n)
 			{
@@ -30,6 +35,7 @@ namespace Game.Data
 				_dataMap.Add(_v.Tag, _v);
 			}
 		}
+		
 
 		public System.Collections.Generic.Dictionary<int, TipsItem> DataMap => _dataMap;
 		public System.Collections.Generic.List<TipsItem> DataList => _dataList;

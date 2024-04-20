@@ -17,19 +17,11 @@ public class LauncherBehaviour
         }
     }
 
-    private readonly EventGroup _eventGroup = new EventGroup();
-
     /// <summary>
     /// 协程启动器
     /// </summary>
     public MonoBehaviour Behaviour;
 
-
-    private LauncherBehaviour()
-    {
-        // 注册监听事件
-        _eventGroup.AddListener<LauncherEventDefine.ChangeToLoginScene>(OnHandleEventMessage);
-    }
 
     /// <summary>
     /// 开启一个协程
@@ -39,14 +31,4 @@ public class LauncherBehaviour
         Behaviour.StartCoroutine(enumerator);
     }
 
-    /// <summary>
-    /// 接收事件
-    /// </summary>
-    private void OnHandleEventMessage(IEventMessage message)
-    {
-        if (message is LauncherEventDefine.ChangeToLoginScene)
-        {
-            YooAssets.LoadSceneAsync("EngineScene");
-        }
-    }
 }

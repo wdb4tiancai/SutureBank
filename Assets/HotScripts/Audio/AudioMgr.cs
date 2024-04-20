@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using Game.Main;
 using Game.Res;
 using Game.Util;
 using System;
@@ -22,7 +23,7 @@ namespace Game.Audio
         /// 初始化
         /// </summary>
         /// <param name="global"></param>
-        public override async UniTask Init()
+        public override void Init()
         {
             m_AudioObject = Engine.Instance.transform.Find("AudioMgr")?.gameObject;
             if (m_AudioObject == null)
@@ -31,28 +32,25 @@ namespace Game.Audio
                 m_AudioObject.transform.SetParent(Engine.Instance.transform, false);
             }
             m_IsInit = true;
-            await UniTask.CompletedTask;
         }
 
         /// <summary>
         /// 销毁
         /// </summary>
-        public override async UniTask Destroy()
+        public override void Destroy()
         {
             if (!m_IsInit)
             {
                 return;
             }
-            await UniTask.CompletedTask;
         }
 
-        public override async UniTask Reset()
+        public override void Reset()
         {
             if (!m_IsInit)
             {
                 return;
             }
-            await UniTask.CompletedTask;
         }
 
         public override void Update(float dt)

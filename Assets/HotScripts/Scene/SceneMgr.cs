@@ -2,9 +2,7 @@
 using Game.Res;
 using Game.UI;
 using Game.Util;
-using UIFramework;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace Game.Scene
 {
@@ -14,27 +12,24 @@ namespace Game.Scene
         private BaseScene m_CurScene;
         private FrameCtrl m_CurFrameCtrl;
 
-        public override async UniTask Init()
+        public override void Init()
         {
             m_IsInit = true;
-            await UniTask.CompletedTask;
         }
-        public override async UniTask Destroy()
+        public override void Destroy()
         {
             if (!m_IsInit)
             {
                 return;
             }
-            await UniTask.CompletedTask;
         }
 
-        public override async UniTask Reset()
+        public override void Reset()
         {
             if (!m_IsInit)
             {
                 return;
             }
-            await UniTask.CompletedTask;
         }
 
 

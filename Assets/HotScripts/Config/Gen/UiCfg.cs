@@ -12,15 +12,20 @@ using Luban;
 
 namespace Game.Data
 {
-	public partial class UiCfg
+	public partial class UiCfg : ConfigBase
 	{
 		private readonly System.Collections.Generic.Dictionary<string, UiCfgItem> _dataMap;
 		private readonly System.Collections.Generic.List<UiCfgItem> _dataList;
 		
-		public UiCfg(ByteBuf _buf)
+		public UiCfg(string configName)
 		{
 			_dataMap = new System.Collections.Generic.Dictionary<string, UiCfgItem>();
 			_dataList = new System.Collections.Generic.List<UiCfgItem>();
+			ConfigName = configName;
+		}
+		
+		public override void LoadByteBuf(ByteBuf _buf)
+		{
 			
 			for(int n = _buf.ReadSize() ; n > 0 ; --n)
 			{
@@ -30,6 +35,7 @@ namespace Game.Data
 				_dataMap.Add(_v.Id, _v);
 			}
 		}
+		
 
 		public System.Collections.Generic.Dictionary<string, UiCfgItem> DataMap => _dataMap;
 		public System.Collections.Generic.List<UiCfgItem> DataList => _dataList;
