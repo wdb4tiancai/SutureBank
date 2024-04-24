@@ -20,14 +20,14 @@ namespace SharePublic
                 string errorCode = fileSystem.AccessSync(path);
                 if (!errorCode.ToLower().Contains("ok"))
                 {
-                    if (MainUtils.IsDebugOpen())
+                    if (ShareDebug.IsDebugOpen())
                     {
                         UnityEngine.Debug.Log($"{path} 不存在");
                     }
                     return loadStr;
                 }
                 loadStr = fileSystem.ReadFileSync(path, "utf8");
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path} 读取的内容{loadStr}");
                 }
@@ -54,7 +54,7 @@ namespace SharePublic
                 string errorCode = fileSystem.AccessSync(path);
                 if (!errorCode.ToLower().Contains("ok"))
                 {
-                    if (MainUtils.IsDebugOpen())
+                    if (ShareDebug.IsDebugOpen())
                     {
                         UnityEngine.Debug.Log($"本地Bytes {path} 不存在");
                     }
@@ -93,7 +93,7 @@ namespace SharePublic
             }
             try
             {
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path} 保存文件的内容 {saveText}");
                 }
@@ -134,7 +134,7 @@ namespace SharePublic
             }
             try
             {
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path} 保存文件的内容 {saveText}");
                 }
@@ -171,7 +171,7 @@ namespace SharePublic
             }
             try
             {
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path}");
                 }
@@ -211,7 +211,7 @@ namespace SharePublic
             }
             try
             {
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path}");
                 }
@@ -235,7 +235,7 @@ namespace SharePublic
             try
             {
                 WXFileSystemManager fileSystem = WX.GetFileSystemManager();
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path}");
                 }
@@ -261,7 +261,7 @@ namespace SharePublic
             try
             {
                 WXFileSystemManager fileSystem = WX.GetFileSystemManager();
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path}");
                 }
@@ -287,7 +287,7 @@ namespace SharePublic
             try
             {
                 WXFileSystemManager fileSystem = WX.GetFileSystemManager();
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path}");
                 }
@@ -311,7 +311,7 @@ namespace SharePublic
             try
             {
                 WXFileSystemManager fileSystem = WX.GetFileSystemManager();
-                if (MainUtils.IsDebugOpen())
+                if (ShareDebug.IsDebugOpen())
                 {
                     UnityEngine.Debug.Log($"{path}");
                 }

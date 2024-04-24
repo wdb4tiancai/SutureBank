@@ -30,7 +30,7 @@ namespace Game.UI
             }
 
             //初始化资源对象
-            ResMgr.Instance.LoadRes("Base_UIFrame", (handle) =>
+            YooAssets.LoadAssetAsync<GameObject>("Base_UIFrame").Completed += (handle) =>
             {
                 m_UIFrameObj = handle.InstantiateSync();
                 m_UIFrameObj.transform.SetParent(Engine.Instance.transform);
@@ -41,7 +41,7 @@ namespace Game.UI
                 m_UIFrame = m_UIFrameObj.GetComponent<UIFrame>();
                 m_UIFrame.Initialize();
                 EngineFsmDefine.UIInitializeSucceed.SendEventMessage();
-            });
+            };
 
         }
         public override void Destroy()
@@ -84,7 +84,7 @@ namespace Game.UI
                 return null;
             }
             AssetHandle assetHandle = YooAssets.LoadAssetAsync<GameObject>(uiInfo.ResPath);
-            await assetHandle.Task;
+            await assetHandle.ToUniTask();
             GameObject uiObj = assetHandle.InstantiateSync();
             uiObj.name = uiName;
             BaseUi baseUi = uiObj.GetComponent<BaseUi>();

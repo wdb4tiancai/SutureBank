@@ -8,10 +8,7 @@ namespace SharePublic
         //是否DEBUG模式
         public static bool IsDebugOpen()
         {
-#if UNITY_EDITOR
             return true;
-#endif
-            return false;
         }
     }
 }

@@ -61,6 +61,7 @@ internal class FsmInitializePackage : IStateNode
         initializationOperation = package.InitializeAsync(createParameters);
 
 #elif GAME_PLATFORM_WEIXIN
+        YooAssets.SetCacheSystemDisableCacheOnWebGL();
         string defaultHostServer = GetHostServerURL();
         string fallbackHostServer = GetHostServerURL();
         var createParameters = new WebPlayModeParameters();

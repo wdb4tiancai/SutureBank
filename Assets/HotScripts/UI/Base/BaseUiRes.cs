@@ -32,18 +32,14 @@ namespace Game.UI
             {
                 return;
             }
-            AssetHandle resource = YooAssets.LoadAssetAsync<Sprite>(resPath);
-            if (resource == null)
+            AssetHandle assetHandle = YooAssets.LoadAssetAsync<Sprite>(resPath);
+            m_UiResAssetHandle.Add(assetHandle);
+            await assetHandle.ToUniTask();
+            if (assetHandle.AssetObject == null)
             {
                 return;
             }
-            m_UiResAssetHandle.Add(resource);
-            await resource.Task;
-            if (resource.Status != EOperationStatus.Succeed)
-            {
-                return;
-            }
-            Sprite sprite = resource.AssetObject as Sprite;
+            Sprite sprite = assetHandle.AssetObject as Sprite;
             if (image != null && sprite != null)
             {
                 image.sprite = sprite;
@@ -58,18 +54,14 @@ namespace Game.UI
             }
             if (prefabParent == null) prefabParent = transform;
 
-            AssetHandle resource = YooAssets.LoadAssetAsync<GameObject>(prefabPath);
-            if (resource == null)
+            AssetHandle assetHandle = YooAssets.LoadAssetAsync<GameObject>(prefabPath);
+            m_UiResAssetHandle.Add(assetHandle);
+            await assetHandle.ToUniTask();
+            if (assetHandle.AssetObject == null)
             {
                 return;
             }
-            m_UiResAssetHandle.Add(resource);
-            await resource.Task;
-            if (resource.Status != EOperationStatus.Succeed)
-            {
-                return;
-            }
-            GameObject prefab = resource.InstantiateSync();
+            GameObject prefab = assetHandle.InstantiateSync();
             prefab.transform.SetParent(prefabParent, false);
             prefab.transform.localPosition = Vector3.zero;
         }

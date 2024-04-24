@@ -13,66 +13,23 @@ using SharePublic;
 public class BuildHelper
 {
 
-    /// <summary>
-    /// 工程目录路径，Assets上一层
-    /// </summary>
-    public static string ProjectPath = Application.dataPath.Replace("Assets", "");
-
-    /// <summary>
-    /// AOTDll来源目录
-    /// </summary>
-    public static string HotAotDllSourcePath = "HybridCLRData/AssembliesPostIl2CppStrip/";
-    /// <summary>
-    /// 热更代码Dll来源目录
-    /// </summary>
-    public static string HotGameDllSourcePath = "HybridCLRData/HotUpdateDlls/";
-
-    /// <summary>
-    /// AOTDll目标目录
-    /// </summary>
-    public static string HotAotDllTargetPath = Path.Combine(Application.dataPath, "HotAssets/AOTDll/");
-    /// <summary>
-    /// 热更代码Dll目标目录
-    /// </summary>
-    public static string HotGameDllTargetPath = Path.Combine(Application.dataPath, "HotAssets/HotUpdateDll/");
-
-    /// <summary>
-    /// AOTDll配置文件名字
-    /// </summary>
-    public const string HotAotDllCfgFileName = "AotDllCfg.json";
-    /// <summary>
-    ///热更代码Dll配置文件名字
-    /// </summary>
-    public const string HotGameDllCfgFileName = "HotUpdateDllCfg.json";
-
-    private static string ANDROID_PROJECT_NAME = ProjectPath + "/Apk";
-
-    [MenuItem("工具/打包工具/打Android整包")]
-    public static void Test()
-    {
-        GenerateAOTDllListFile();
-        GenerateHotDllListFile();
-        BuildInternal();
-
-        BuildPipeline.BuildPlayer(EditorBuildSettings.scenes, ANDROID_PROJECT_NAME + "/test.apk", BuildTarget.Android, BuildOptions.None);
-    }
-
-    [MenuItem("工具/打包工具/生成AOTDll并复制进文件夹")]
+    [MenuItem("工具/打包工具/步骤/生成AOTDll并复制进文件夹")]
     public static bool GenerateAOTDllListFile()
     {
         //先生成AOT文件
         PrebuildCommand.GenerateAll();
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
+
         //后拷贝文件
-        string aotDllSourcePath = Path.Combine(ProjectPath, HotAotDllSourcePath, GetTargetPath());
+        string aotDllSourcePath = Path.Combine(BuildCfgHelper.ProjectPath, BuildCfgHelper.HotAotDllSourcePath, GetTargetPath());
         Debug.Log($"AOTDll来源目录 {aotDllSourcePath}");
 
-        string aotDllTargetPath = Path.Combine(ProjectPath, HotAotDllTargetPath);
+        string aotDllTargetPath = Path.Combine(BuildCfgHelper.ProjectPath, BuildCfgHelper.HotAotDllTargetPath);
         Debug.Log($"AOTDll目标目录 {aotDllTargetPath}");
 
         // AOTDll配置文件名字
-        string aotDllCfgFilePath = Path.Combine(aotDllTargetPath, HotAotDllCfgFileName);
+        string aotDllCfgFilePath = Path.Combine(aotDllTargetPath, BuildCfgHelper.HotAotDllCfgFileName);
         Debug.Log($"AOTDll配置文件名字 {aotDllCfgFilePath}");
 
         if (!Directory.Exists(aotDllTargetPath))
@@ -90,6 +47,9 @@ public class BuildHelper
                 File.Delete(fileNmae);
             }
         }
+
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
 
         //写新的配置文件
         IReadOnlyList<string> assemblies = AOTGenericReferences.PatchedAOTAssemblyList;
@@ -110,28 +70,32 @@ public class BuildHelper
             }
             File.Copy(copySourcePath, copyTagetPath);
         }
+
         AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
         Debug.Log("生成AOTDll并复制进文件夹");
         return true;
     }
 
-    [MenuItem("工具/打包工具/生成HotDll件并复制进文件夹")]
+    [MenuItem("工具/打包工具/步骤/生成HotDll件并复制进文件夹")]
     public static bool GenerateHotDllListFile()
     {
         //先生成AOT文件
         CompileDllCommand.CompileDllActiveBuildTarget();
 
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
+
         //后拷贝文件
-        string gameDllSourcePath = Path.Combine(ProjectPath, HotGameDllSourcePath, GetTargetPath());
+        string gameDllSourcePath = Path.Combine(BuildCfgHelper.ProjectPath, BuildCfgHelper.HotGameDllSourcePath, GetTargetPath());
         Debug.Log($"热更代码Dll来源目录 {gameDllSourcePath}");
 
-        string gameDllTargetPath = Path.Combine(ProjectPath, HotGameDllTargetPath);
+        string gameDllTargetPath = Path.Combine(BuildCfgHelper.ProjectPath, BuildCfgHelper.HotGameDllTargetPath);
         Debug.Log($"热更代码Dll目标目录 {gameDllTargetPath}");
 
 
         //热更代码Dll配置文件名字
-        string gameDllCfgFilePath = Path.Combine(gameDllTargetPath, HotGameDllCfgFileName);
+        string gameDllCfgFilePath = Path.Combine(gameDllTargetPath, BuildCfgHelper.HotGameDllCfgFileName);
         Debug.Log($"热更代码Dll配置文件名字 {gameDllCfgFilePath}");
 
         if (!Directory.Exists(gameDllTargetPath))
@@ -154,6 +118,8 @@ public class BuildHelper
                 File.Delete(fileNmae);
             }
         }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
 
         //根据配置列表拷贝新的GameDLL
         List<string> gameDllFileName = JsonMapper.ToObject<List<string>>(File.ReadAllText(gameDllCfgFilePath));
@@ -168,6 +134,7 @@ public class BuildHelper
             }
             File.Copy(copySourcePath, copyTagetPath);
         }
+        AssetDatabase.SaveAssets();
         AssetDatabase.Refresh();
 
         Debug.Log("生成HotDll件并复制进文件夹");
@@ -175,12 +142,11 @@ public class BuildHelper
         return true;
     }
 
-    [MenuItem("工具/打包工具/生成热更资源")]
 
-    private static void BuildInternal()
+    //生成热更资源
+    public static void BuildUpdateAsset(BuildTarget buildTarget, string packageVersion)
     {
-        BuildTarget buildTarget = BuildTarget.Android;
-        Debug.Log($"开始构建 : {buildTarget}");
+        Debug.Log($"开始构建 平台： {buildTarget} 版本号：{packageVersion}");
 
         var buildoutputRoot = AssetBundleBuilderHelper.GetDefaultBuildOutputRoot();
         var streamingAssetsRoot = AssetBundleBuilderHelper.GetStreamingAssetsRoot();
@@ -193,7 +159,7 @@ public class BuildHelper
         buildParameters.BuildTarget = buildTarget;
         buildParameters.BuildMode = EBuildMode.ForceRebuild;
         buildParameters.PackageName = AssetsVersion.AssetPackageName;
-        buildParameters.PackageVersion = "1.0.0";
+        buildParameters.PackageVersion = packageVersion;
         buildParameters.VerifyBuildingResult = true;
         buildParameters.FileNameStyle = EFileNameStyle.HashName;
         buildParameters.BuildinFileCopyOption = EBuildinFileCopyOption.ClearAndCopyByTags;
@@ -212,6 +178,8 @@ public class BuildHelper
         {
             Debug.LogError($"构建失败 : {buildResult.ErrorInfo}");
         }
+        AssetDatabase.SaveAssets();
+        AssetDatabase.Refresh();
     }
 
 
@@ -226,6 +194,10 @@ public class BuildHelper
         else if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.iOS)
         {
             return "iOS/";
+        }
+        else if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.WebGL)
+        {
+            return "WebGL/";
         }
         else if (EditorUserBuildSettings.activeBuildTarget == BuildTarget.StandaloneWindows64)
         {

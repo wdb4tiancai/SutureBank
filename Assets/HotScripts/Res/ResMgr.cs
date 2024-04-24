@@ -61,29 +61,6 @@ namespace Game.Res
             System.GC.Collect();
             Debug.Log("UnLoadAssets");
         }
-
-
-        /// <summary>
-        /// 资源加载
-        /// </summary>
-        /// <param name="resName"></param>
-        /// <param name="loadCallBack"></param>
-        public void LoadRes(string resName, Action<AssetHandle> loadCallBack)
-        {
-            AssetHandle handle = YooAssets.LoadAssetAsync(resName);
-            handle.Completed += loadCallBack;
-        }
-
-        /// <summary>
-        /// 资源加载
-        /// </summary>
-        /// <param name="sceneName"></param>
-        /// <param name="loadCallBack"></param>
-        public async UniTask LoadSceneAsync(string sceneName, LoadSceneMode sceneMode = LoadSceneMode.Single)
-        {
-            SceneHandle handle = YooAssets.LoadSceneAsync(sceneName, sceneMode);
-            await handle.Task;
-        }
     }
 }
 

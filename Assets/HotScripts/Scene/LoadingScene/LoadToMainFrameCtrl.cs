@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Game.Res;
 using Game.UI;
 using UnityEngine;
+using YooAsset;
 
 namespace Game.Scene
 {
@@ -32,7 +33,8 @@ namespace Game.Scene
             MainScene mainScene = new MainScene();
             MainFrameCtrl mainFrameCtrl = new MainFrameCtrl(mainScene);
             SceneMgr.Instance.ChangeCtrl(mainFrameCtrl);
-            await ResMgr.Instance.LoadSceneAsync("MainScene");
+            SceneHandle handle = YooAssets.LoadSceneAsync("MainScene");
+            await handle.ToUniTask();
             await UiMgr.Instance.OpenUiAsync(UiCfg.MainUi);
             UiMgr.Instance.CloseUi(UiCfg.LoadingUi);
         }

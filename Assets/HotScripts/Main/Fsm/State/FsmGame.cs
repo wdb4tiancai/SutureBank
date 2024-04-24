@@ -16,12 +16,10 @@ namespace Game.Main
 
         public void OnEnter()
         {
-            if (ShareDebug.IsDebugOpen())
-            {
-                Debug.Log("进入游戏状态");
-            }
             SceneMgr.Instance.ChangeToLoginScene().Forget();
         }
+
+
 
         public void OnExit()
         {

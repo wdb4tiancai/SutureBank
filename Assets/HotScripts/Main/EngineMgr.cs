@@ -1,10 +1,10 @@
-﻿using Cysharp.Threading.Tasks;
-using Game.UI;
-using Game.Data;
+﻿using Game.UI;
 using Game.Audio;
 using Game.Res;
 using Game.Scene;
 using Game.Util;
+using UnityEngine;
+using SharePublic;
 
 namespace Game.Main
 {
@@ -14,12 +14,20 @@ namespace Game.Main
 
         public override void Init()
         {
+            if (ShareDebug.IsDebugOpen())
+            {
+                Debug.Log("EngineMgr Init");
+            }
             m_EngineFsmMgr = new EngineFsmMgr();
         }
 
         public void Start()
         {
-            m_EngineFsmMgr.Start();
+            if (ShareDebug.IsDebugOpen())
+            {
+                Debug.Log("EngineMgr Start");
+            }
+            m_EngineFsmMgr?.Start();
         }
 
         public override void Destroy()
@@ -43,7 +51,7 @@ namespace Game.Main
 
         public override void Update(float dt)
         {
-            m_EngineFsmMgr.Update();
+            m_EngineFsmMgr?.Update();
             SceneMgr.Instance.Update(dt);
             UiMgr.Instance.Update(dt);
         }

@@ -6,6 +6,8 @@ using HybridCLR;
 using System.Reflection;
 using LitJson;
 using UniFramework.Machine;
+using Cysharp.Threading.Tasks;
+
 
 /// <summary>
 /// 加载热更代码
@@ -14,20 +16,18 @@ using UniFramework.Machine;
 internal class FsmLoadHotUpdateDll : IStateNode
 {
     private StateMachine m_Machine;
-    private bool m_IsLoadDllSucceed = true;
     void IStateNode.OnCreate(StateMachine machine)
     {
         m_Machine = machine;
     }
     void IStateNode.OnEnter()
     {
-        m_IsLoadDllSucceed = true;
         LauncherEventDefine.LauncherStatesChange.SendEventMessage("加载热更代码！");
         Debug.Log("加载热更代码");
 #if UNITY_EDITOR
         m_Machine.ChangeState<FsmLauncherGame>();
 #else
-        LauncherBehaviour.Instance.StartCoroutine(LoadHotUpdateDll());
+        LoadHotUpdateDll().Forget();
 #endif
 
 
@@ -40,78 +40,67 @@ internal class FsmLoadHotUpdateDll : IStateNode
     }
 
     //加载DLL代码
-    private IEnumerator LoadHotUpdateDll()
+    private async UniTaskVoid LoadHotUpdateDll()
     {
-        yield return LoadMetadataForAOTAssemblies();
-        if (m_IsLoadDllSucceed == false)
-        {
-            yield break;
-        }
-        yield return LoadHotUpdateAssemblies();
-        if (m_IsLoadDllSucceed == false)
-        {
-            yield break;
-        }
+        await LoadMetadataForAOTAssemblies();
+        await LoadHotUpdateAssemblies();
+        await UniTask.CompletedTask;
         m_Machine.ChangeState<FsmLauncherGame>();
     }
 
     //加载Aot依赖
-    private IEnumerator LoadMetadataForAOTAssemblies()
+    private async UniTask LoadMetadataForAOTAssemblies()
     {
         Debug.Log("加载AOT依赖");
         HomologousImageMode mode = HomologousImageMode.SuperSet;
 
-        var cfgHandle = YooAssets.LoadAssetSync("AotDllCfg", typeof(TextAsset));
-        yield return cfgHandle;
+        AssetHandle cfgHandle = YooAssets.LoadAssetAsync("AotDllCfg", typeof(TextAsset));
+        await cfgHandle.ToUniTask();
 
-        List<string> allDllNames = JsonMapper.ToObject<List<string>>(((TextAsset)cfgHandle.AssetObject).ToString());
-        foreach (var name in allDllNames)
+        List<string> aotDllFiles = JsonMapper.ToObject<List<string>>(((TextAsset)cfgHandle.AssetObject).ToString());
+        foreach (var aotDllFile in aotDllFiles)
         {
-            var dataHandle = YooAssets.LoadAssetSync(name, typeof(TextAsset));
-            yield return dataHandle;
-            if (dataHandle.Status != EOperationStatus.Succeed)
+            AssetHandle aotHandle = YooAssets.LoadAssetAsync(aotDllFile, typeof(TextAsset));
+            await aotHandle.ToUniTask();
+            if (aotHandle.Status != EOperationStatus.Succeed)
             {
-                Debug.Log("AOT资源加载失败" + name);
-                m_IsLoadDllSucceed = false;
-                yield break;
+                Debug.Log($"AOT资源加载 {aotDllFile} 失败");
+                return;
             }
             // 加载assembly对应的dll，会自动为它hook。一旦aot泛型函数的native函数不存在，用解释器版本代码
-            LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(((TextAsset)dataHandle.AssetObject).bytes, mode);
-            dataHandle.Release();
+            LoadImageErrorCode err = RuntimeApi.LoadMetadataForAOTAssembly(((TextAsset)aotHandle.AssetObject).bytes, mode);
+            aotHandle.Release();
             if (err != LoadImageErrorCode.OK)
             {
-                Debug.Log("AOT加载失败" + name);
-                m_IsLoadDllSucceed = false;
-                yield break;
+                Debug.Log($"AOT资源加载 {aotDllFile} 失败");
+                return;
             }
-            Debug.Log($"LoadMetadataForAOTAssembly:{name}. mode:{mode} ret:{err}");
+            Debug.Log($"AOT资源加载:{aotDllFile}. mode:{mode} ret:{err}");
         }
-        yield return true;
+        await UniTask.CompletedTask;
     }
 
     //加载代码
-    private IEnumerator LoadHotUpdateAssemblies()
+    private async UniTask LoadHotUpdateAssemblies()
     {
         Debug.Log("加载代码");
-        var cfgHandle = YooAssets.LoadAssetSync("HotUpdateDllCfg", typeof(TextAsset));
-        yield return cfgHandle;
+        AssetHandle cfgHandle = YooAssets.LoadAssetAsync("HotUpdateDllCfg", typeof(TextAsset));
+        await cfgHandle.ToUniTask();
 
-        List<string> allDllNames = JsonMapper.ToObject<List<string>>(((TextAsset)cfgHandle.AssetObject).ToString());
-        foreach (var name in allDllNames)
+        List<string> hotDllFiles = JsonMapper.ToObject<List<string>>(((TextAsset)cfgHandle.AssetObject).ToString());
+        foreach (var hotDllFile in hotDllFiles)
         {
-            var dataHandle = YooAssets.LoadAssetSync(name, typeof(TextAsset));
-            yield return dataHandle;
-            if (dataHandle.Status != EOperationStatus.Succeed)
+            AssetHandle hotDllHandle = YooAssets.LoadAssetAsync(hotDllFile, typeof(TextAsset));
+            await hotDllHandle.ToUniTask();
+            if (hotDllHandle.Status != EOperationStatus.Succeed)
             {
-                Debug.Log("资源加载失败" + name);
-                m_IsLoadDllSucceed = false;
-                yield break;
+                Debug.Log($"加载热更新Dll: {hotDllFile} 失败");
+                return;
             }
-            Assembly assembly = Assembly.Load(((TextAsset)dataHandle.AssetObject).bytes);
-            dataHandle.Release();
-            Debug.Log(assembly.GetTypes());
-            Debug.Log($"加载热更新Dll:{name}");
+            Assembly.Load(((TextAsset)hotDllHandle.AssetObject).bytes);
+            hotDllHandle.Release();
+            Debug.Log($"加载热更新Dll: {hotDllFile} 成功");
         }
-        yield return true;
+        await UniTask.CompletedTask;
     }
 }

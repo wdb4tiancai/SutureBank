@@ -1,4 +1,5 @@
 ﻿using Cysharp.Threading.Tasks;
+using SharePublic;
 using System;
 using UnityEngine;
 namespace Game.Main
@@ -10,6 +11,10 @@ namespace Game.Main
 
         private void Awake()
         {
+            if (ShareDebug.IsDebugOpen())
+            {
+                Debug.Log("Engine Awake");
+            }
             Instance = this;
             DateTime now = DateTime.Now;
             UnityEngine.Random.InitState(now.Second);
@@ -19,6 +24,10 @@ namespace Game.Main
 
         private void Start()
         {
+            if (ShareDebug.IsDebugOpen())
+            {
+                Debug.Log("Engine 启动");
+            }
             EngineMgr.Instance.Start();
         }
 

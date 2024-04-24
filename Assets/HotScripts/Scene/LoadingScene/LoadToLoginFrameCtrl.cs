@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Game.Res;
 using Game.UI;
 using UnityEngine;
+using YooAsset;
 
 namespace Game.Scene
 {
@@ -32,7 +33,8 @@ namespace Game.Scene
             LoginScene loadingScene = new LoginScene();
             LoginFrameCtrl loginFrameCtrl = new LoginFrameCtrl(loadingScene);
             SceneMgr.Instance.ChangeCtrl(loginFrameCtrl);
-            await ResMgr.Instance.LoadSceneAsync("LoginScene");
+            SceneHandle handle = YooAssets.LoadSceneAsync("LoginScene");
+            await handle.ToUniTask();
             await UiMgr.Instance.OpenUiAsync(UiCfg.LoginUi);
             UiMgr.Instance.CloseUi(UiCfg.LoadingUi);
         }

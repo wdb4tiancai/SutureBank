@@ -200,7 +200,7 @@ namespace Game.Audio
         //资源加载
         private void LoadResFunc(string audioName, Action<AssetHandle> loadCallBack)
         {
-            ResMgr.Instance.LoadRes(audioName, loadCallBack);
+            YooAssets.LoadAssetAsync(audioName).Completed += loadCallBack;
         }
 
         //资源释放

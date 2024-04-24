@@ -286,11 +286,11 @@ namespace Cysharp.Threading.Tasks
         }
 
 #if UNITY_2020_1_OR_NEWER
-		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
+        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterAssembliesLoaded)]
 #else
 		[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
 #endif
-        static void Init()
+        public static void Init()
         {
             // capture default(unity) sync-context.
             unitySynchronizationContext = SynchronizationContext.Current;
@@ -528,8 +528,8 @@ namespace Cysharp.Threading.Tasks
             {
                 sb.AppendFormat("------{0}------", header.type.Name);
                 sb.AppendLine();
-                
-                if (header.subSystemList is null) 
+
+                if (header.subSystemList is null)
                 {
                     sb.AppendFormat("{0} has no subsystems!", header.ToString());
                     sb.AppendLine();
@@ -557,11 +557,11 @@ namespace Cysharp.Threading.Tasks
 
             foreach (var header in playerLoop.subSystemList)
             {
-                if (header.subSystemList is null) 
-                { 
+                if (header.subSystemList is null)
+                {
                     continue;
                 }
-                
+
                 foreach (var subSystem in header.subSystemList)
                 {
                     if (subSystem.type == typeof(UniTaskLoopRunners.UniTaskLoopRunnerInitialization))

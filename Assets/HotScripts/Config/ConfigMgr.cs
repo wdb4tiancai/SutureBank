@@ -69,10 +69,10 @@ namespace Game.Main
         //加载配置表
         private void LoadCfg(ConfigBase config)
         {
-            ResMgr.Instance.LoadRes(config.ConfigName, (handle) =>
+            YooAssets.LoadAssetAsync(config.ConfigName).Completed += (handle) =>
             {
                 ChangeLoadCfg(config, handle);
-            });
+            };
         }
 
         //更改下载记录
