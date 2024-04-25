@@ -22,7 +22,7 @@ namespace Game.Scene
         public override void Destroy()
         {
             base.Destroy();
-            Debug.Log("MainFrameCtrl Init");
+            Debug.Log("MainFrameCtrl Destroy");
         }
     }
 }

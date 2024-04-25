@@ -1,5 +1,5 @@
 #-define:UI_FRAME_DEBUG		           #UILog输出
-#-define:GAME_PLATFORM_EDITOR           #游戏平台编辑器
+-define:GAME_PLATFORM_EDITOR           #游戏平台编辑器
 #-define:GAME_PLATFORM_ANDROID          #游戏平台Android
 #-define:GAME_PLATFORM_IOS              #游戏平台苹果
--define:GAME_PLATFORM_WEIXIN            #游戏平台微信小游戏
+#-define:GAME_PLATFORM_WEIXIN            #游戏平台微信小游戏

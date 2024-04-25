@@ -2,6 +2,7 @@
 using Game.Res;
 using Game.UI;
 using Game.Util;
+using System;
 using UnityEngine;
 using YooAsset;
 
@@ -47,24 +48,17 @@ namespace Game.Scene
         //切换到登录场景
         public async UniTask ChangeToLoginScene()
         {
-            Debug.Log("ChangeToLoginScene -1");
             //设置目标帧率
             SetTargetFrame(60);
-            Debug.Log("ChangeToLoginScene 0");
             //打开与关闭ui
             await OpenLoadingUIAndLoadLoadingScene();
-            Debug.Log("ChangeToLoginScene 1");
             LoadingScene loadingScene = new LoadingScene();
             LoadToLoginFrameCtrl loadingFrameCtrl = new LoadToLoginFrameCtrl(loadingScene);
-            Debug.Log("ChangeToLoginScene 2");
             //更改设置
             ChangeCtrl(loadingFrameCtrl);
             //开始去Login场景
             await loadingFrameCtrl.ToLoginScene();
-            Debug.Log("ChangeToLoginScene 3");
         }
-
-
 
 
         //切换到主场景

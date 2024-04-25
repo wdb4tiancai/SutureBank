@@ -59,7 +59,7 @@ namespace Game.Res
             package?.UnloadUnusedAssets();
             Resources.UnloadUnusedAssets();
             System.GC.Collect();
-            Debug.Log("UnLoadAssets");
+            Debug.Log("是否所有资源");
         }
     }
 }
