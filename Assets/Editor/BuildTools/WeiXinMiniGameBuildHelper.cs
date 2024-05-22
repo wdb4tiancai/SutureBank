@@ -1,9 +1,9 @@
 ﻿
 using UnityEditor;
 using UnityEngine;
+#if GAME_PLATFORM_WEIXIN
 using WeChatWASM;
 using static WeChatWASM.WXConvertCore;
-#if GAME_PLATFORM_WEIXIN
 public class WeiXinMiniGameBuildHelper
 {
     [MenuItem("工具/打包工具/微信小游戏/微信小游戏整包")]

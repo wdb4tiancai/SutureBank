@@ -14,13 +14,6 @@
       "dependencies": {},
       "hash": "de0348c453844f91d52e736be681f0713ae47201"
     },
-    "com.qq.weixin.minigame": {
-      "version": "https://github.com/wechat-miniprogram/minigame-tuanjie-transform-sdk.git",
-      "depth": 0,
-      "source": "git",
-      "dependencies": {},
-      "hash": "7d4bd55b5bdd39d299942c48cfb673d9a4951318"
-    },
     "com.tuyoogame.yooasset": {
       "version": "file:com.tuyoogame.yooasset@2.1.1",
       "depth": 0,
