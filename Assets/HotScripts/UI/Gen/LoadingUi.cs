@@ -1,4 +1,4 @@
-﻿using UIFramework;
+﻿using UIFrameWork;
 using UnityEngine;
 
 namespace Game.UI

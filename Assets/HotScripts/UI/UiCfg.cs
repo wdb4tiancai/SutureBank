@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using UIFramework;
+using UIFrameWork;
 using UnityEngine;
 namespace Game.UI
 {
@@ -12,20 +12,20 @@ namespace Game.UI
 
 
         //ui配置表自动添加
-        public static Dictionary<string, ScreenInfo> UIInfo = new Dictionary<string, ScreenInfo>();
+        public static Dictionary<string, BaseScreenInfo> UIInfo = new Dictionary<string, BaseScreenInfo>();
         public static void AddUIInfo(int layerId, string name, string resPath, bool hideOnForegroundLost = true, bool isPopup = false)
         {
             if (UIInfo.ContainsKey(name))
             {
                 Debug.LogError($"重复添加UI {name}");
             }
-            ScreenInfo screenInfo = new ScreenInfo();
+            BaseScreenInfo screenInfo = new BaseScreenInfo();
             UIInfo.Add(name, screenInfo);
-            screenInfo.LayerId = layerId;
-            screenInfo.Name = name;
-            screenInfo.ResPath = resPath;
-            screenInfo.HideOnForegroundLost = hideOnForegroundLost;
-            screenInfo.IsPopup = isPopup;
+            screenInfo.SetLayerId(layerId);
+            screenInfo.SetName(name);
+            screenInfo.SetResPath(resPath);
+            screenInfo.SetIsHideOnForegroundLost(hideOnForegroundLost);
+            screenInfo.SetIsPopup(isPopup);
         }
     }
 }

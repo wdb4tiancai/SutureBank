@@ -1,4 +1,4 @@
-﻿using UIFramework;
+﻿using UIFrameWork;
 using YooAsset;
 
 namespace Game.UI
@@ -31,7 +31,7 @@ namespace Game.UI
         /// 显示逻辑
         /// </summary>
         /// <param name="screenData"></param>
-        protected override void OnShowScreen(BaseScreenData screenData)
+        protected override void OnShowScreen(BaseScreenData screenData, bool isAni)
         {
             OnTransitionInFinished();
         }
@@ -39,7 +39,7 @@ namespace Game.UI
         /// <summary>
         /// 关闭逻辑
         /// </summary>
-        protected override void OnCloseScreen()
+        protected override void OnCloseScreen(bool isAni)
         {
             OnTransitionOutFinished();
         }

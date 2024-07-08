@@ -1,6 +1,6 @@
 ﻿using Game.Util;
 using Cysharp.Threading.Tasks;
-using UIFramework;
+using UIFrameWork;
 using YooAsset;
 using UnityEngine;
 using Game.Data;
@@ -77,7 +77,7 @@ namespace Game.UI
         //打开ui界面，异步的
         public async UniTask<BaseUi> OpenUiAsync(string uiName, BaseScreenData screenData)
         {
-            ScreenInfo uiInfo;
+            BaseScreenInfo uiInfo;
             if (!UiCfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
                 Debug.LogError($" {uiName} 不存在 ");
@@ -104,7 +104,7 @@ namespace Game.UI
         /// <param name="uiName"></param>
         public void CloseUi(string uiName)
         {
-            ScreenInfo uiInfo;
+            BaseScreenInfo uiInfo;
             if (!UiCfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
                 Debug.LogError($" {uiName} 不存在 ");
@@ -139,7 +139,7 @@ namespace Game.UI
         //获得打开的ui
         public BaseUi GetOpenUi(string uiName)
         {
-            ScreenInfo uiInfo;
+            BaseScreenInfo uiInfo;
             if (!UiCfg.UIInfo.TryGetValue(uiName, out uiInfo))
             {
                 Debug.LogError($" {uiName} 不存在 ");

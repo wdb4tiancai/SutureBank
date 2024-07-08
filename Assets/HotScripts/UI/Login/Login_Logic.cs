@@ -1,7 +1,7 @@
 ﻿using Game.Scene;
 using System.Collections;
 using System.Collections.Generic;
-using UIFramework;
+using UIFrameWork;
 using UnityEngine;
 using YooAsset;
 namespace Game.UI
