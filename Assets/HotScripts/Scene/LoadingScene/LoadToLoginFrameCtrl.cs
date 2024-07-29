@@ -33,7 +33,7 @@ namespace Game.Scene
             LoginFrameCtrl loginFrameCtrl = new LoginFrameCtrl(loadingScene);
             SceneMgr.Instance.ChangeCtrl(loginFrameCtrl);
             await ResMgr.Instance.LoadSceneAsync("LoginScene");
-            await UiMgr.Instance.OpenUiAsync(UiCfg.LoginUi);
+            await UiMgr.Instance.OpenUiAsync(UiCfg.SelectServerUI);
             UiMgr.Instance.CloseUi(UiCfg.LoadingUi);
         }
     }

@@ -34,6 +34,8 @@ namespace Game.Scene
             SceneMgr.Instance.ChangeCtrl(mainFrameCtrl);
             await ResMgr.Instance.LoadSceneAsync("MainScene");
             await UiMgr.Instance.OpenUiAsync(UiCfg.MainUi);
+            await UiMgr.Instance.OpenUiAsync(UiCfg.CurrencyUI);
+            await UiMgr.Instance.OpenUiAsync(UiCfg.MainMenuUi);
             UiMgr.Instance.CloseUi(UiCfg.LoadingUi);
         }
     }

@@ -1,7 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Game.UI;
 using Game.Config;
-using UnityEngine;
 using Game.Audio;
 using Game.Res;
 using Game.Scene;

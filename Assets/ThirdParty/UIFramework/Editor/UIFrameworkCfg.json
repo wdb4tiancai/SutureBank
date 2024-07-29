@@ -1,5 +1,5 @@
 {
 	"FolderList":["Assets/HotScripts/UI/Gen"],
 	"NameSpaceList":["Game.UI"],
-	"BaseClassList":["BaseUi","BaseScreen"]
+	"BaseClassList":["BaseUi","MonoBehaviour"]
 }

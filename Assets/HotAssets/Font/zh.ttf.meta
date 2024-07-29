@@ -1,0 +1,22 @@
+fileFormatVersion: 2
+guid: 9dcc03d7bde625a49af27a2d45d87f9a
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - HYYaKuHei
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 702c0927f0a5f7f4893a6c631706659e, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

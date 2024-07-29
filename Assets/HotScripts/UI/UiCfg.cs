@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UIFramework;
 using UnityEngine;
 
@@ -8,6 +7,9 @@ public class UiCfg
     public const string MainUi = "MainUi";
     public const string LoadingUi = "LoadingUi";
     public const string LoginUi = "LoginUi";
+    public const string SelectServerUI = "SelectServerUI";
+    public const string CurrencyUI = "CurrencyUI";
+    public const string MainMenuUi = "MainMenuUi";
 
 
 

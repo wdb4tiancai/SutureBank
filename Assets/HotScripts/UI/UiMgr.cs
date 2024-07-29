@@ -3,8 +3,6 @@ using Cysharp.Threading.Tasks;
 using UIFramework;
 using YooAsset;
 using UnityEngine;
-using System;
-using System.Collections.Generic;
 using Game.Config;
 using Game.Data;
 
